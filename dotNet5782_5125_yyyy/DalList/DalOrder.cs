@@ -1,9 +1,8 @@
-﻿
-using DO;
-
+﻿using DO;
+using DalApi;
 namespace Dal;
 
-public class DalOrder
+internal class DalOrder : IOrder
 {
     public Order order;
 
@@ -39,14 +38,16 @@ public class DalOrder
     /// <param name="_CustomerEmail"></param>
     /// <param name="_CustomerAdress"></param>
     /// <param name="_DeliveryDate"></param>
-    public DalOrder(int _ID, string _CustomerName, string _CustomerEmail, string _CustomerAdress,DateTime _DeliveryDate)
+    public DalOrder(int _ID, string _CustomerName, string _CustomerEmail, string _CustomerAdress,DateTime _OrderDate)
     {
         order = new Order();
         order.ID = _ID;
         order.CustomerName = _CustomerName;
         order.CustomerEmail = _CustomerEmail;
         order.CustomerAdress = _CustomerAdress;
-        order.DeliveryDate = _DeliveryDate;
+        order.OrderDate = _OrderDate;
+        order.ShipDate = DateTime.MinValue;
+        order.DeliveryDate = DateTime.MinValue;
     }
     #endregion
     #region Override Functions
@@ -56,85 +57,130 @@ public class DalOrder
     }
     #endregion
     #region CRUD functions
-    public void AddOrder()
+    public int Add(Order order)
     {
         try
         {
-            if (DataSource.Config.orderindex==DataSource.NUMBER_OF_ORDERS-1)
+            if (DataSource._orderlist.Count==DataSource.NUMBER_OF_ORDERS)
             {
-                throw new Exception("insufficient space,order array is full");
+                throw new DalApi.OutOfRangeEx();
             }
-            this.order.ID = DataSource.Config.order_Id;
-            DataSource._orderArray[DataSource.Config.orderindex] = new DalOrder(this.order.ID,
-                this.order.CustomerName,
-                this.order.CustomerEmail,
-                this.order.CustomerAdress);
-            DataSource.Config.orderindex++;
-            Console.WriteLine("order was added to order list.");
-            Console.WriteLine("your order ID is:"+this.order.ID);
-            return;
+            order.ID = DataSource.Config.order_Id;
+            DataSource._orderlist.Add( new DalOrder(order.ID,
+                order.CustomerName,
+                order.CustomerEmail,
+                order.CustomerAdress,
+                DateTime.Now));
+            return order.ID;
+        }
+        catch (DalApi.OutOfRangeEx e)
+        {
+            throw;
+        }
+    }
+    public Order Get(int ID)
+    {
+        try
+        {
+            for (int i = 0; i < DataSource._orderlist.Count; i++)
+            {
+                if (DataSource._orderlist[i].order.ID == ID)
+                {
+                    Order get_order = new Order();
+                    get_order.ID = DataSource._orderlist[i].order.ID;
+                    get_order.CustomerName = DataSource._orderlist[i].order.CustomerName;
+                    get_order.CustomerEmail = DataSource._orderlist[i].order.CustomerEmail;
+                    get_order.CustomerAdress = DataSource._orderlist[i].order.CustomerAdress;
+                    get_order.OrderDate = DataSource._orderlist[i].order.OrderDate;
+                    get_order.ShipDate = DataSource._orderlist[i].order.ShipDate;
+                    get_order.DeliveryDate = DataSource._orderlist[i].order.DeliveryDate;
+                    return get_order;
+                }
+            }
+            throw new DalApi.ObjectNotFoundEx();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            return;
+            return new Order();
         }
+       
     }
-    public string DisplayOrder(int ID)
+    public void Update(Order order)
     {
-        for (int i = 0; i < DataSource.Config.orderindex; i++)
+        try
         {
-            if (DataSource._orderArray[i].order.ID==ID)
+            for (int i = 0; i < DataSource._orderlist.Count; i++)
             {
-                return DataSource._orderArray[i].ToString();
-            }
-        }
-        return "order was not found on list!";
-    }
-    public void UpdateOrder()
-    {
-        for (int i = 0; i < DataSource.Config.orderindex; i++)
-        {
-            if (DataSource._orderArray[i].order.ID==this.order.ID)
-            {
-                DataSource._orderArray[i].order.CustomerName = this.order.CustomerName;
-                DataSource._orderArray[i].order.CustomerEmail = this.order.CustomerEmail;
-                DataSource._orderArray[i].order.CustomerAdress = this.order.CustomerAdress;
-                DataSource._orderArray[i].order.OrderDate = this.order.OrderDate;
-                Console.WriteLine("order was updated!");
-                return;
-            }
-        }
-        Console.WriteLine("order was'nt found, check order ID!");
-    }
-    public void DeleteOrder(int ID)
-    {
-        bool flag=true;// we use flag to avoid index violation.
-        for (int i = 0; i < DataSource.Config.orderItemindex; i++)
-        {
-            if (!flag)
-            {
-                break;
-            }
-            if (DataSource._orderArray[i].order.ID==ID)//we found the order to delete.
-            {
-                for (int j = i; j < DataSource.Config.orderindex; j++)
+                if (DataSource._orderlist[i].order.ID == order.ID)
                 {
-                    if (j<DataSource.Config.orderindex)
-                    {
-                        DataSource._orderArray[j] = DataSource._orderArray[j + 1];
-                    }
+                    DataSource._orderlist[i].order.CustomerName = order.CustomerName;
+                    DataSource._orderlist[i].order.CustomerEmail = order.CustomerEmail;
+                    DataSource._orderlist[i].order.CustomerAdress = order.CustomerAdress;
+                    DataSource._orderlist[i].order.OrderDate = order.OrderDate;
+                    DataSource._orderlist[i].order.ShipDate = order.ShipDate;
+                    DataSource._orderlist[i].order.DeliveryDate = order.DeliveryDate;
+                    Console.WriteLine("order was updated!");
+                    return;
                 }
-                flag=false;
-                DataSource.Config.orderindex--;
-                Console.WriteLine("order was deleted.");
-                return;
             }
+            throw new DalApi.ObjectNotFoundEx();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
     }
-    public DalOrder[] PrintOrders()
+    public void Delete(int ID)
     {
-        return DataSource._orderArray;
+        try
+        {
+            if (DataSource._orderlist.Count==0)
+            {
+                throw new DalApi.EmptyListEx();
+            }
+            bool flag = true;// we use flag to avoid index violation.
+            for (int i = 0; i < DataSource._orderlist.Count; i++)
+            {
+                if (!flag)
+                {
+                    break;
+                }
+                if (DataSource._orderlist[i].order.ID == ID)//we found the order to delete.
+                {
+                    DataSource._orderlist.RemoveAt(i);
+                    flag = false;
+                    Console.WriteLine("order was deleted.");
+                    return;
+                }
+            }
+            throw new DalApi.ObjectNotFoundEx();
+        }
+        catch (DalApi.EmptyListEx e)
+        {
+            throw;
+        }
+        catch(DalApi.ObjectNotFoundEx e)
+        {
+            throw;
+        }
+    }
+    public IEnumerable<Order> GetAll()
+    {
+        List<Order> orders = new List<Order>();
+        foreach (DalOrder order in DataSource._orderlist)
+        {
+            Order curr = new Order();
+            curr.ID = order.order.ID;
+            curr.OrderDate = order.order.OrderDate;
+            curr.CustomerAdress = order.order.CustomerAdress;
+            curr.CustomerEmail = order.order.CustomerEmail;
+            curr.ShipDate = order.order.ShipDate;
+            curr.CustomerName = order.order.CustomerName;
+            curr.DeliveryDate= order.order.DeliveryDate;
+            orders.Add(curr);
+        }
+        return orders;
     }
     #endregion
     

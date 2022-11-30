@@ -1,4 +1,6 @@
 ﻿using Dal;
+using DalApi;
+using DO;
 using System.Data.Common;
 
 namespace Main // Note: actual namespace depends on the project name.
@@ -6,11 +8,10 @@ namespace Main // Note: actual namespace depends on the project name.
    
     public class DalMain
     {
-        static DalProduct product=new DalProduct();
-        static DalOrder order=new DalOrder();
-        static DalOrderItem item=new DalOrderItem();
+        static DalList DalList = new DalList();
         static void Main(string[] args)
         {
+            //DalList.Order.Add(new DO.Order());
             Console.WriteLine("Hello Customer!\nplease choose one of the options below:");
             int choose=1;
             while (choose!=0)
@@ -54,8 +55,11 @@ namespace Main // Note: actual namespace depends on the project name.
                                         int inStock;
                                         Console.WriteLine("enter amount in stock.");
                                         int.TryParse(Console.ReadLine(), out inStock);
-                                        DalMain.product= new DalProduct(0, name, price, (DO.Enums.Category)category, inStock);
-                                        product.AddProduct();
+                                        Product p=new Product();
+                                        p.Name = name;
+                                        p.InStock=inStock;
+                                        p.Category = (Enums.Category)category;
+                                        DalList.Product.Add(p);
                                         break;
                                     }
                                 case "b":
@@ -63,23 +67,15 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter product ID to display.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(), out ID);
-                                        product = new DalProduct();
-                                        Console.WriteLine(product.DisplayProduct(ID));
+                                        Console.WriteLine(DalList.Product.Get(ID));
                                         break;
                                     }
                                 case "c":
                                     {
-                                        DalProduct[] Products = new DalProduct().PrintProducts();
-                                        foreach (DalProduct Product in Products)
+                                        IEnumerable<Product> Products = DalList.Product.GetAll();
+                                        foreach (Product Product in Products)
                                         {
-                                            if (Product!=null)
-                                            {
-                                                Console.WriteLine(Product);
-                                            }
-                                            else
-                                            {
-                                                break;
-                                            }
+                                            Console.WriteLine(Product);
                                         }                   
                                         break;
                                     }
@@ -103,8 +99,11 @@ namespace Main // Note: actual namespace depends on the project name.
                                         int inStock;
                                         Console.WriteLine("enter amount in stock.");
                                         int.TryParse(Console.ReadLine(), out inStock);
-                                        product = new DalProduct(0, name, price, (DO.Enums.Category)category, inStock);
-                                        product.UpdateProduct(ID, name, price, (DO.Enums.Category)category, inStock);
+                                        Product p = new Product();
+                                        p.Name = name;
+                                        p.InStock = inStock;
+                                        p.Category = (Enums.Category)category;
+                                        DalList.Product.Update(p);
                                         break;
 
                                     }
@@ -113,8 +112,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("enter product ID to delete.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(),out ID);
-                                        product=new DalProduct();
-                                        product.DeleteProduct(ID);
+                                        DalList.Product.Delete(ID);
                                         break;
                                     }
                                 case "f":
@@ -145,8 +143,11 @@ namespace Main // Note: actual namespace depends on the project name.
                                         string adress=Console.ReadLine();
                                         Console.WriteLine("please enter customer email.");
                                         string email=Console.ReadLine();
-                                        order=new DalOrder(0,name,email,adress);
-                                        order.AddOrder();
+                                        Order o = new Order();
+                                        o.CustomerName = name;
+                                        o.CustomerEmail = email;
+                                        o.CustomerAdress = adress;
+                                        DalList.Order.Add(o);
                                         break;
 
 
@@ -156,22 +157,15 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to display.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(),out ID);
-                                        Console.WriteLine(order.DisplayOrder(ID));
+                                        Console.WriteLine(DalList.Order.Get(ID));
                                         break;
                                     }
                                 case "c":
                                     {
-                                        DalOrder[] Orders=new DalOrder().PrintOrders();
-                                        foreach (DalOrder order in Orders)
+                                        IEnumerable<Order> Orders = DalList.Order.GetAll();
+                                        foreach (Order order in Orders)
                                         {
-                                            if (order!=null)
-                                            {
-                                                Console.WriteLine(order);
-                                            }
-                                            else
-                                            {
-                                                break;
-                                            }
+                                            Console.WriteLine(order);
                                         }
                                         
                                         break;
@@ -187,8 +181,11 @@ namespace Main // Note: actual namespace depends on the project name.
                                         string adress = Console.ReadLine();
                                         Console.WriteLine("please enter customer email.");
                                         string email = Console.ReadLine();
-                                        order = new DalOrder(ID, name, email, adress);
-                                        order.UpdateOrder();
+                                        Order o = new Order();
+                                        o.CustomerName = name;
+                                        o.CustomerEmail = email;
+                                        o.CustomerAdress = adress;
+                                        DalList.Order.Update(o);
                                         break;
                                     }
                                 case "e":
@@ -196,7 +193,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to delete.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(), out ID);
-                                        order.DeleteOrder(ID);
+                                        DalList.Order.Delete(ID);
                                         break;
                                     }
                                 case "f":
@@ -230,38 +227,35 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter amount.");
                                         int Amount;
                                         int.TryParse(Console.ReadLine(), out Amount);
-                                        item= new DalOrderItem(ProductID, OrderID, Amount);
-                                        item.AddOrderItem();
+                                        OrderItem oi = new OrderItem();
+                                        oi.OrderId=OrderID;
+                                        oi.ProductId=ProductID;
+                                        DalList.OrderItem.Add(oi);
                                         break;
                                     }
                                 case "b":
-                                    {
+                                    {/* NOTICE: we used to use 2 ids, but the ICRUD forced us to use first one and after that 
+                                      * get the second one in inner function.
                                         Console.WriteLine("please enter product Id to purchase.");
                                         int ProductID;
-                                        int.TryParse(Console.ReadLine(), out ProductID);
+                                        int.TryParse(Console.ReadLine(), out ProductID);*/
                                         Console.WriteLine("please enter order Id to add this item to");
                                         int OrderID;
                                         int.TryParse(Console.ReadLine(), out OrderID);
-                                        Console.WriteLine(item.DisplayOrderItem(OrderID,ProductID));
+                                        Console.WriteLine(DalList.OrderItem.Get(OrderID));
                                         break;
                                     }
                                 case "c":
                                     {
+                                        /*
                                         //TODO: when we can add logic we only return the specipic order items.
                                         Console.WriteLine("please enter order ID to display its items.");
                                         int OrderID;
-                                        int.TryParse(Console.ReadLine(), out OrderID);
-                                        DalOrderItem[] Items = item.PrintOrderItems();
-                                        foreach (DalOrderItem item in Items)
+                                        int.TryParse(Console.ReadLine(), out OrderID);*/
+                                        IEnumerable <OrderItem > Items = DalList.OrderItem.GetAll();
+                                        foreach (OrderItem item in Items)
                                         {
-                                            if (item == null)
-                                            {
-                                                break;
-                                            }
-                                            if (item.Item.OrderId==OrderID)
-                                            {
-                                                Console.WriteLine(item);
-                                            }
+                                            Console.WriteLine(item);
                                         }
                                         break;     
                                     }
@@ -276,19 +270,19 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter amount.");
                                         int Amount;
                                         int.TryParse(Console.ReadLine(), out Amount);
-                                        item = new DalOrderItem(ProductID, OrderID, Amount);
-                                        item.UpdateOrderItem(OrderID,ProductID);
+                                        OrderItem oi = new OrderItem();
+                                        oi.ProductId = ProductID;
+                                        oi.OrderId = OrderID;
+                                        oi.Amount=Amount;
+                                        DalList.OrderItem.Update(oi);
                                         break;
                                     }
                                 case "e":
                                     {
-                                        Console.WriteLine("please enter product Id to purchase.");
-                                        int ProductID;
-                                        int.TryParse(Console.ReadLine(), out ProductID);
-                                        Console.WriteLine("please enter order Id to add this item to");
-                                        int OrderID;
-                                        int.TryParse(Console.ReadLine(), out OrderID);
-                                        item.DeleteOrderItem(OrderID,ProductID);
+                                        Console.WriteLine("please enter Order item id to delete");
+                                        int ID;
+                                        int.TryParse(Console.ReadLine(), out ID);
+                                        DalList.OrderItem.Delete(ID);
                                         break;
                                     }
                                 case "f":

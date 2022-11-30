@@ -1,8 +1,9 @@
 ﻿using DO;
+using DalApi;
 
 namespace Dal;
 
-public class DalProduct //we are using wrapper design pattern.
+internal class DalProduct : IProduct
 {
     //fields
     public Product product;
@@ -41,114 +42,151 @@ public class DalProduct //we are using wrapper design pattern.
     }
     #endregion
     #region CRUD functions
-    public void AddProduct()
+    public int Add(Product product)
     {
         try
-        {   //first check if there is inough space.
-            if (DataSource.Config.productIndex==DataSource.NUMBER_OF_PRODUCTS-1)
+        {  
+            //first check if there is inough space.
+            if (DataSource._productlist.Count==DataSource.NUMBER_OF_PRODUCTS)
             {
-                throw new Exception("insufficient space,product array is full");
+                throw new OutOfRangeEx();
             }
             //there is space.
-            this.product.ID = DataSource.Config.product_Id;
-            DataSource._productArray[DataSource.Config.productIndex] = new DalProduct(this.product.ID,
-                this.product.Name,
-                this.product.Price,
-                this.product.Category,
-                this.product.InStock);
-            DataSource.Config.productIndex++;
-            Console.WriteLine("product was added to products' list!");
-            Console.WriteLine("your product ID is:" + String.Format("{0:000000}",this.product.ID));
-            return;
+            product.ID = DataSource.Config.product_Id;
+            DataSource._productlist.Add( new DalProduct(product.ID,
+                product.Name,
+                product.Price,
+                product.Category,
+                product.InStock));
+            return product.ID;
         }
-        catch (Exception e)
+        catch (DalApi.OutOfRangeEx e)
         {
-            Console.WriteLine(e.Message);
-            return;
+            throw;
         }
     }
 
-    public string DisplayProduct(int ID)
-    {
-        for (int i = 0; i < DataSource.Config.productIndex; i++)
-        {
-            if (DataSource._productArray[i].product.ID==ID)
-            {
-                return DataSource._productArray[i].product.ToString();
-            }
-        }
-        return "product was not found!\n";
-    }
-
-    public void DeleteProduct(int iD)
+    public Product Get(int ID) 
     {
         try
         {
-            if (DataSource.Config.productIndex==0)
+            for (int i = 0; i < DataSource._productlist.Count; i++)
             {
-                throw new Exception("product array is empty!");
+                if (DataSource._productlist[i].product.ID == ID)
+                {
+                    Product get_product=new Product();
+
+                    get_product.ID = DataSource._productlist[i].product.ID;
+                    get_product.Name = DataSource._productlist[i].product.Name;
+                    get_product.Price = DataSource._productlist[i].product.Price;
+                    get_product.Category = DataSource._productlist[i].product.Category;
+                    get_product.InStock = DataSource._productlist[i].product.InStock;
+                    return get_product;
+                }
+            }
+            throw new ObjectNotFoundEx();
+        }
+        catch (ObjectNotFoundEx e)
+        {
+            throw e;
+        }
+        
+    }
+
+    public void Delete(int ID)
+    {
+        try
+        {
+            if (DataSource._productlist.Count==0)
+            {
+                throw new EmptyListEx();
             }
             bool flag = true;//flag is true until we delete the product.
-            for (int i = 0; i < DataSource.Config.productIndex; i++)
+            for (int i = 0; i < DataSource._productlist.Count; i++)
             {
                 if (!flag)
                 {
                     break;
                 }
-                if (DataSource._productArray[i].product.ID == iD)//product was found
+                if (DataSource._productlist[i].product.ID ==ID)//product was found
                 {
-                    //start rearenging array.
-                    for (int j = i; j < DataSource.Config.productIndex + 1; j++)
-                    {
-                        if (j < DataSource.Config.productIndex)
-                        {
-                            DataSource._productArray[j] = DataSource._productArray[j + 1];
-                        }
-                    }
+                    DataSource._productlist.RemoveAt(i);
                     flag = false;
-                    DataSource.Config.productIndex--;
                 }
             }
             if (flag)
-                Console.WriteLine("product was not found.\n");
+            {
+                throw new DalApi.ObjectNotFoundEx();
+            }
             else
                 Console.WriteLine("product was deleted.");
             return;
         }
-        catch (Exception e)
+        catch(DalApi.ObjectNotFoundEx e)
         {
-            Console.WriteLine(e.Message);
+            throw;
         }
-        
     }
 
-    public void UpdateProduct(int _ID, string _Name, double _Price, Enums.Category _Category, int _InStock)
+    public void Update(Product product)
     {
-        for (int i = 0; i < DataSource.Config.productIndex; i++)//first find product.
+        try
         {
-            if (DataSource._productArray[i].product.ID == _ID)//product was found
+            if (DataSource._productlist.Count==0)
             {
-                //start updateting product.
-                DataSource._productArray[i].product.Name=_Name;
-                DataSource._productArray[i].product.Price=_Price;
-                DataSource._productArray[i].product.Category=_Category;
-                DataSource._productArray[i].product.InStock=_InStock;
-                Console.WriteLine("product was updated."); //letting user know update was successful.
-                break;
+                throw new EmptyListEx();
             }
+            for (int i = 0; i < DataSource._productlist.Count; i++)//first find product.
+            {
+                if (DataSource._productlist[i].product.ID == product.ID)//product was found
+                {
+                    //start updateting product.
+                    DataSource._productlist[i].product.Name = product.Name;
+                    DataSource._productlist[i].product.Price = product.Price;
+                    DataSource._productlist[i].product.Category = product.Category;
+                    DataSource._productlist[i].product.InStock = product.InStock;
+                    Console.WriteLine("product was updated."); //letting user know update was successful.
+                    return;
+                }
+            }
+            throw new DalApi.ObjectNotFoundEx();
         }
-        Console.WriteLine("product was not found.\n");//we didnt find the product id on list.
+        catch(DalApi.EmptyListEx e)
+        {
+            throw e;
+        }
+        catch (DalApi.ObjectNotFoundEx e)
+        {
+            throw e;
+        }
     }
-   
-    public DalProduct[] PrintProducts()
+     
+    public IEnumerable<Product> GetAll()
     {
-        return DataSource._productArray;
+        try
+        {
+            if (DataSource._productlist.Count==0)
+            {
+                throw new DalApi.EmptyListEx();
+            }
+            List<Product> products = new List<Product>();
+            foreach (DalProduct product in DataSource._productlist)
+            {
+                Product curr = new Product();
+                curr.ID = product.product.ID;
+                curr.Name = product.product.Name;
+                curr.Price = product.product.Price;
+                curr.Category = product.product.Category;
+                curr.InStock = product.product.InStock;
+                products.Add(curr);
+            }
+            return products;
+        }
+        catch (DalApi.EmptyListEx e)
+        {
+            throw;
+        }
     }
        
     #endregion
-      
-        
-               
-        
-
 }

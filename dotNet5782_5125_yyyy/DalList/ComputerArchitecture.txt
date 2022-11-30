@@ -1,4 +1,0 @@
-﻿Digital Design and Computer Architecture
-Schaum's Outline of Computer Architecture
-Learning Computer Architecture with Raspberry Pi
-Computer Architecture: A Quantitative Approach 

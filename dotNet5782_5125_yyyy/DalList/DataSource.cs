@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using DO;
+using System.Collections.Generic;
 
 namespace Dal;
 
@@ -16,19 +17,15 @@ internal static class DataSource
     public static int NUMBER_OF_ORDERITEMS = 200;
     #region fields-arrays of dalobjects.
     static readonly Random random = new Random();
-    internal static DalProduct[] _productArray = new DalProduct[NUMBER_OF_PRODUCTS];
-    internal static DalOrder[] _orderArray = new DalOrder[NUMBER_OF_ORDERS];
-    internal static DalOrderItem[] _orderItemsArray=new DalOrderItem[NUMBER_OF_ORDERITEMS];
+    internal static List<DalProduct> _productlist = new List<DalProduct>();
+    internal static List<DalOrder> _orderlist =new List<DalOrder>();
+    internal static List<DalOrderItem> _orderItemslist=new List<DalOrderItem>();
     #endregion
     #region Config inner class
     internal static class Config
     {
-        //next open slot in each array indexers.
-        internal static int orderindex=0;
-        internal static int orderItemindex = 0;
-        internal static int productIndex = 0;
         //IDs generator.
-        private static int productId=0; //TODO: later change it to 0, and used formated string to print it as 6 figures.
+        private static int productId=0;
 
         public static int product_Id
         {
@@ -42,6 +39,15 @@ internal static class DataSource
         {
             get { return orderId++; }
         }
+
+        private static int OrderItemID=0;
+
+        public static int OrderItem_ID
+        {
+            get { return OrderItemID++; }
+        }
+
+
     }
     #endregion
     #region Creating arrays functions
@@ -58,9 +64,8 @@ internal static class DataSource
         foreach (string line in ComputerArchitecture)
         {
 
-            _productArray[Config.productIndex] = new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)2, random.Next(0, 100) % 5);
-            Config.productIndex++;
+            _productlist.Add( new DalProduct(Config.product_Id, line,
+                random.NextDouble() + random.Next(10, 80), (Enums.Category)2, random.Next(0, 100) % 5));
         }
         string[] CyberSecurity = {"Cybersecurity: The Beginner's Guide",
                                "CompTIA Security+Get Certified Get Ahead",
@@ -70,10 +75,9 @@ internal static class DataSource
         foreach (string line in CyberSecurity)
         {
 
-            _productArray[Config.productIndex] = new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)3, random.Next(0, 100) % 5);
-            Config.productIndex++;
-        }
+            _productlist.Add(new DalProduct(Config.product_Id, line,
+                random.NextDouble() + random.Next(10, 80), (Enums.Category)3, random.Next(0, 100) % 5));
+        }   
         string[] OS = {"Operating Systems: Three Easy Pieces",
                           "Modern Operating Systems",
             "Understanding Operating Systems",
@@ -81,10 +85,8 @@ internal static class DataSource
             "Operating System Concep"};
         foreach (string line in OS)
         {
-
-            _productArray[Config.productIndex] = new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)1, random.Next(0, 100) % 5);
-            Config.productIndex++;
+            _productlist.Add( new DalProduct(Config.product_Id, line,
+                random.NextDouble() + random.Next(10, 80), (Enums.Category)1, random.Next(0, 100) % 5));
         }
         string[] ProgrammingLanguges = {"Learn python",
             "Python for beginners",
@@ -96,9 +98,8 @@ internal static class DataSource
         foreach (string line in ProgrammingLanguges)
         {
 
-            _productArray[Config.productIndex] = new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)0, random.Next(0, 100) % 5);
-            Config.productIndex++;
+            _productlist.Add( new DalProduct(Config.product_Id, line,
+                random.NextDouble() + random.Next(10, 80), (Enums.Category)0, random.Next(0, 100) % 5));
         }
 
     }
@@ -110,33 +111,30 @@ internal static class DataSource
             Customer += random.Next(0, 400).ToString();
             string Email = "";
             Email += Customer + "@gmail.com";
-            _orderArray[Config.orderindex] = new DalOrder(Config.order_Id,
+            _orderlist.Add( new DalOrder(Config.order_Id,
                 Customer,
                 Email,
-                "israel");
-            Config.orderindex++;
+                "israel"));
         }
     }
     private static void createOrderItemArray()
     {
-        for (int i = 0; i < Config.orderindex; i++)//first we set a product for each order.
+        for (int i = 0; i < _orderlist.Count; i++)//first we set a product for each order.
         {
-            int Product_Index=random.Next(0,Config.productIndex-1);//we first randomize a product.
-            _orderItemsArray[Config.orderItemindex] = new DalOrderItem(_productArray[Product_Index].product.ID,
+            int Product_Index=random.Next(0,_productlist.Count);//we first randomize a product.
+            _orderItemslist.Add( new DalOrderItem(_productlist[Product_Index].product.ID,
                 i,
                 random.Next(1,5)
-                );
-            Config.orderItemindex++;
+                ));
         }
         for (int i = 0; i < random.Next(10,20); i++)//we randomly add items to exisiting orders.
         {
-            int Product_Index = random.Next(0, Config.productIndex-1);
-            int Order_Id = random.Next(0, Config.orderindex-1);
-            _orderItemsArray[Config.orderItemindex] = new DalOrderItem(_productArray[Product_Index].product.ID,
+            int Product_id = random.Next(0, _productlist.Count);
+            int Order_Id = random.Next(0, _orderlist.Count);
+            _orderItemslist.Add( new DalOrderItem(_productlist[Product_id].product.ID,
                 Order_Id,
                 random.Next(1, 5)
-                );
-            Config.orderItemindex++;
+                ));
         }
     }           
     #endregion               

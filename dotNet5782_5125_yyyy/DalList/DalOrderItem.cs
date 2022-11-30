@@ -1,8 +1,8 @@
 ﻿using DO;
-
+using DalApi;
 namespace Dal;
 
-public class DalOrderItem
+internal class DalOrderItem : IOrderItem
 {
     //fields.
     public OrderItem Item;
@@ -24,14 +24,15 @@ public class DalOrderItem
     /// <param name="_Amount"></param>
     public DalOrderItem(int _ProductId, int _OrderId,int _Amount)
     {
+        Item.ID = DataSource.Config.OrderItem_ID;
         Item = new OrderItem();
         Item.ProductId = _ProductId;
         Item.OrderId = _OrderId;
-        for (int i = 0; i < DataSource.Config.productIndex; i++)
+        for (int i = 0; i < DataSource._productlist.Count; i++)
         {
-            if (DataSource._productArray[i].product.ID==_ProductId)
+            if (DataSource._productlist[i].product.ID==_ProductId)
             {
-                Item.Price = DataSource._productArray[i].product.Price;
+                Item.Price = DataSource._productlist[i].product.Price;
             }
         }
         Item.Amount = _Amount;
@@ -44,88 +45,120 @@ public class DalOrderItem
     }
     #endregion
     #region CRUD functions
-    public void AddOrderItem()
+    public int Add(OrderItem orderItem)
     {
-        bool flag = false;
-        //we first search if there is an order with the same ID.
-        for (int i = 0; i < DataSource.Config.orderindex; i++)
+        try
         {
-            if (DataSource._orderArray[i].order.ID==this.Item.OrderId)
+            if (DataSource._orderlist.Count == 0)
+                throw new DalApi.EmptyListEx();
+            bool flag = false;
+            //we first search if there is an order with the same ID.
+            for (int i = 0; i < DataSource._orderlist.Count; i++)
             {
-                flag=true;
-                break;
-            }
-        }
-        if (!flag)
-        {
-            Console.WriteLine("order id dont match any order.");
-            return;
-        }
-        DataSource._orderItemsArray[DataSource.Config.orderItemindex] = new DalOrderItem(this.Item.ProductId,
-            this.Item.OrderId,
-            this.Item.Amount);
-        Console.WriteLine("order item was added to order successfully.");
-        return;
-    }
-    public string DisplayOrderItem(int OrderID,int ProductID)
-    {
-        for (int i = 0; i < DataSource.Config.orderItemindex; i++)
-        {
-            if (DataSource._orderItemsArray[i].Item.OrderId==OrderID&& DataSource._orderItemsArray[i].Item.ProductId==ProductID)
-            {
-                return DataSource._orderItemsArray[i].ToString();
-            }
-        }
-        return "item was not found! check order id or product id.";
-    }
-    public void UpdateOrderItem(int OrderID,int ProductID)
-    {
-        for (int i = 0; i < DataSource.Config.orderItemindex; i++)
-        {
-            if (DataSource._orderItemsArray[i].Item.OrderId == OrderID && DataSource._orderItemsArray[i].Item.ProductId == ProductID)
-            {
-                DataSource._orderItemsArray[i].Item.Amount = this.Item.Amount; //we can only change the amount in order.
-                return;
-            }
-        }
-        Console.WriteLine("item was not found in this order.");
-    }
-    public void DeleteOrderItem(int OrderID,int ProductID)
-    {
-        bool flag = true;
-        for (int i = 0; i < DataSource.Config.orderItemindex; i++)
-        {
-            if (DataSource._orderItemsArray[i].Item.OrderId == OrderID && DataSource._orderItemsArray[i].Item.ProductId == ProductID)
-            {
-                for (int j = 0; j < DataSource.Config.orderItemindex; j++)
+                if (DataSource._orderlist[i].order.ID == orderItem.OrderId)
                 {
-                    if (j<DataSource.Config.orderItemindex)
-                    {
-                        DataSource._orderItemsArray[j] = DataSource._orderItemsArray[j +1];
-                    }
+                    flag = true;
+                    break;
                 }
-                flag = false;
-                DataSource.Config.orderItemindex--;
-                Console.WriteLine("item was deleted from order");
-                return;
             }
+            if (!flag)
+            {   //now order matches this id.
+                throw new DalApi.ObjectNotFoundEx();
+            }
+            DataSource._orderItemslist.Add(new DalOrderItem(orderItem.ProductId,
+                orderItem.OrderId,
+                orderItem.Amount));
+            return 1;
+        }
+        catch (DalApi.ObjectNotFoundEx e)
+        {
+            throw;
+        }
+        catch(DalApi.EmptyListEx e)
+        {
+            throw;
         }
     }
-    public DalOrderItem[] PrintOrderItems() //could add order id
+    public void Update(OrderItem orderItem)
     {
-        /*DalOrderItem[] dalOrderItems=new DalOrderItem[DataSource.Config.orderItemindex];
-        int index = 0;
-        for (int i = 0; i < DataSource.Config.orderItemindex; i++)
+        try
         {
-            if (DataSource._orderItemsArray[i].Item.OrderId==OrderID)
+            for (int i = 0; i < DataSource._orderItemslist.Count; i++)
             {
-                dalOrderItems[index++]=new DalOrderItem(DataSource._orderItemsArray[i].Item.ProductId,
-                    DataSource._orderItemsArray[i].Item.OrderId,
-                    DataSource._orderItemsArray[i].Item.Amount);
+                if (DataSource._orderItemslist[i].Item.OrderId == orderItem.OrderId &&
+                    DataSource._orderItemslist[i].Item.ProductId == orderItem.ProductId)
+                {
+                    DataSource._orderItemslist[i].Item.Amount = orderItem.Amount; //we can only change the amount in order.
+                    return;
+                }
             }
+            throw new DalApi.ObjectNotFoundEx();
         }
-        return dalOrderItems;*/
-        return DataSource._orderItemsArray;
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+    public void Delete(int ID)
+    {
+        try
+        {
+            bool flag = true;
+            for (int i = 0; i < DataSource._orderItemslist.Count; i++)
+            {
+                if (!flag)
+                {
+                    break;
+                }
+                if (DataSource._orderItemslist[i].Item.ID==ID)
+                {
+                    DataSource._orderItemslist.RemoveAt(i);
+                    flag = false;
+                    Console.WriteLine("item was deleted from order");
+                    return;
+                }
+            }
+            throw new DalApi.ObjectNotFoundEx();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+    }
+    public IEnumerable<OrderItem> GetAll() //could add order id
+    {
+
+        List<OrderItem> orderItems=new List<OrderItem>();
+        foreach (DalOrderItem orderItem in DataSource._orderItemslist)
+        {
+            OrderItem curr = new OrderItem();
+            curr.OrderId=orderItem.Item.OrderId;
+            curr.ProductId=orderItem.Item.ProductId;
+            curr.Amount=orderItem.Item.Amount;
+            curr.Price=orderItem.Item.Price;
+            orderItems.Add(curr);
+        }
+        return orderItems;  
+    }
+    public OrderItem Get(int orderID)
+    {
+        try
+        {
+            for (int i = 0; i < DataSource._orderItemslist.Count; i++)
+            {
+                if (DataSource._orderItemslist[i].Item.ID==orderID)
+                {
+                    return DataSource._orderItemslist[i].Item;
+                }
+            }
+            throw new DalApi.ObjectNotFoundEx();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return new OrderItem();
+        }
     }
     #endregion
 }
