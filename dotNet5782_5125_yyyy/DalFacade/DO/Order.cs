@@ -4,12 +4,12 @@ public struct Order
 {
     //fields
     public int ID { get; set; } //orders' id
-    public string CustomerName { get; set; } // customer who placed the order/
-    public string CustomerEmail { get; set; }//customer Email.
-    public string CustomerAdress { get; set; }//customer adress
-    public DateTime OrderDate { get; set; }//the time and date the order was placed.
-    public DateTime ShipDate { get; set; }//when the order is going to be shipped.
-    public DateTime DeliveryDate { get; set; }// when it will be delivered.
+    public string? CustomerName{ get; set; } // customer who placed the order/
+    public string? CustomerEmail{ get; set; }//customer Email.
+    public string? CustomerAdress{ get; set; }//customer adress
+    public DateTime? OrderDate{ get; set; }//the time and date the order was placed.
+    public DateTime? ShipDate { get; set; }//when the order is going to be shipped.
+    public DateTime? DeliveryDate { get; set; }// when it will be delivered.
     #region Override Functions
     /// <summary>
     /// To string override function, to display an order info.

@@ -7,11 +7,11 @@ using DO;
 
 namespace DalApi;
 
-public interface ICrud<T>
+public interface ICrud<T>where T : struct
 {
     int Add (T entity);
     void Update (T entity);
     void Delete (int ID);
     T Get (int id);
-    IEnumerable<T> GetAll ();
+    IEnumerable<T?> GetAll (Func<T?,bool>? Select =null);
 }

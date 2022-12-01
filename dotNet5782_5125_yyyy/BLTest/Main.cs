@@ -245,11 +245,19 @@ namespace BLTest
                             {
                                 case "b":
                                     {
-                                        Console.WriteLine("please enter order ID to display.");
-                                        int ID;
-                                        int.TryParse(Console.ReadLine(), out ID);
-                                        Console.WriteLine(BL.Order.Get(ID));
-                                        break;
+                                        try
+                                        {
+                                            Console.WriteLine("please enter order ID to display.");
+                                            int ID;
+                                            int.TryParse(Console.ReadLine(), out ID);
+                                            Console.WriteLine(BL.Order.Get(ID));
+                                            break;
+                                        }
+                                        catch (BO.ObjectNotFoundEx e)
+                                        {
+                                            Console.WriteLine(e.message+"\n"+e.GetType());
+                                            break;
+                                        }
                                     }
                                 case "c":
                                     {

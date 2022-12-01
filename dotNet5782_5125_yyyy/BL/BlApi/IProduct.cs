@@ -13,7 +13,7 @@ public interface IProduct
     /// fuction used to retrive a list of products.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<ProductForList> GetAll();
+    public IEnumerable<ProductForList?> GetAll();
     /// <summary>
     /// function used to get details of specific product.
     /// for manager screen.

@@ -4,71 +4,25 @@ namespace Dal;
 
 internal class DalOrderItem : IOrderItem
 {
-    //fields.
-    public OrderItem Item;
-    #region ctors
-    /// <summary>
-    /// deafault ctor to craete access to data source object.
-    /// </summary>
-    public DalOrderItem()
-    {
-        Item = new OrderItem();
-    }
-
-    /// <summary>
-    /// ctor using explicit fields to create a new Dal layer order item object.
-    /// </summary>
-    /// <param name="_ProductId"></param>
-    /// <param name="_OrderId"></param>
-    /// <param name="_Price"></param>
-    /// <param name="_Amount"></param>
-    public DalOrderItem(int _ProductId, int _OrderId,int _Amount)
-    {
-        Item.ID = DataSource.Config.OrderItem_ID;
-        Item = new OrderItem();
-        Item.ProductId = _ProductId;
-        Item.OrderId = _OrderId;
-        for (int i = 0; i < DataSource._productlist.Count; i++)
-        {
-            if (DataSource._productlist[i].product.ID==_ProductId)
-            {
-                Item.Price = DataSource._productlist[i].product.Price;
-            }
-        }
-        Item.Amount = _Amount;
-    }
-    #endregion
-    #region Override Functions
-    public override string? ToString()
-    {
-        return Item.ToString(); 
-    }
-    #endregion
     #region CRUD functions
+    /// <summary>
+    /// to add a new order item to data base.
+    /// </summary>
+    /// <param name="orderItem">that we want to add.</param>
+    /// <returns></returns>
     public int Add(OrderItem orderItem)
     {
         try
         {
+            if (DataSource._orderItemslist.Count == DataSource.NUMBER_OF_ORDERITEMS)
+                throw new DalApi.OutOfRangeEx(); //no more space in list.
             if (DataSource._orderlist.Count == 0)
                 throw new DalApi.EmptyListEx();
-            bool flag = false;
             //we first search if there is an order with the same ID.
-            for (int i = 0; i < DataSource._orderlist.Count; i++)
-            {
-                if (DataSource._orderlist[i].order.ID == orderItem.OrderId)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag)
-            {   //now order matches this id.
-                throw new DalApi.ObjectNotFoundEx();
-            }
-            DataSource._orderItemslist.Add(new DalOrderItem(orderItem.ProductId,
-                orderItem.OrderId,
-                orderItem.Amount));
-            return 1;
+            Order order = DataSource._orderlist.FirstOrDefault(p => p?.ID == orderItem.OrderId) ?? throw new DalApi.ObjectNotFoundEx();
+            orderItem.ID = DataSource.Config.OrderItem_ID;
+            DataSource._orderItemslist.Add(orderItem);
+            return orderItem.ID;
         }
         catch (DalApi.ObjectNotFoundEx e)
         {
@@ -79,26 +33,39 @@ internal class DalOrderItem : IOrderItem
             throw;
         }
     }
+    /// <summary>
+    /// to update a certin order item from data base.
+    /// </summary>
+    /// <param name="orderItem">holds all new fields.</param>
+    /// <exception cref="DalApi.ObjectNotFoundEx"></exception>
     public void Update(OrderItem orderItem)
     {
         try
         {
+            if (DataSource._orderItemslist.Count==0)
+            {
+                throw new DalApi.EmptyListEx();
+            }
             for (int i = 0; i < DataSource._orderItemslist.Count; i++)
             {
-                if (DataSource._orderItemslist[i].Item.OrderId == orderItem.OrderId &&
-                    DataSource._orderItemslist[i].Item.ProductId == orderItem.ProductId)
+                if (DataSource._orderItemslist[i]?.ID==orderItem.ID)
                 {
-                    DataSource._orderItemslist[i].Item.Amount = orderItem.Amount; //we can only change the amount in order.
-                    return;
+                    DataSource._orderItemslist[i] = orderItem;
+                    return; 
                 }
             }
             throw new DalApi.ObjectNotFoundEx();
         }
-        catch (Exception e)
+        catch (ObjectNotFoundEx e)
         {
-            Console.WriteLine(e.Message);
+            throw e;
         }
     }
+    /// <summary>
+    /// to delete a certin order item from data base.
+    /// </summary>
+    /// <param name="ID">of the order item we want to delete.</param>
+    /// <exception cref="DalApi.ObjectNotFoundEx"></exception>
     public void Delete(int ID)
     {
         try
@@ -110,7 +77,7 @@ internal class DalOrderItem : IOrderItem
                 {
                     break;
                 }
-                if (DataSource._orderItemslist[i].Item.ID==ID)
+                if (DataSource._orderItemslist[i]?.ID==ID)
                 {
                     DataSource._orderItemslist.RemoveAt(i);
                     flag = false;
@@ -126,38 +93,51 @@ internal class DalOrderItem : IOrderItem
         }
 
     }
-    public IEnumerable<OrderItem> GetAll() //could add order id
+    /// <summary>
+    /// to get all order items from data base.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<OrderItem?> GetAll(Func<OrderItem?, bool>? Select = null)
     {
-
-        List<OrderItem> orderItems=new List<OrderItem>();
-        foreach (DalOrderItem orderItem in DataSource._orderItemslist)
+        if (Select==null) //no filter.
         {
-            OrderItem curr = new OrderItem();
-            curr.OrderId=orderItem.Item.OrderId;
-            curr.ProductId=orderItem.Item.ProductId;
-            curr.Amount=orderItem.Item.Amount;
-            curr.Price=orderItem.Item.Price;
-            orderItems.Add(curr);
+            List<OrderItem?> orderItems = new List<OrderItem?>();
+            foreach (OrderItem orderItem in DataSource._orderItemslist)
+            {
+                orderItems.Add(orderItem);
+            }
+            return orderItems;
         }
-        return orderItems;  
+        else
+        {
+            List<OrderItem?> orderItems = new List<OrderItem?>();
+            foreach (OrderItem orderItem in DataSource._orderItemslist)
+            {
+             
+                if (Select(orderItem))
+                {
+                    orderItems.Add(orderItem);
+                }
+            }
+            return orderItems;
+        }
     }
-    public OrderItem Get(int orderID)
+    /// <summary>
+    /// to retrive a certin order item from data base
+    /// </summary>
+    /// <param name="orderID">of the order item we want.</param>
+    /// <returns></returns>
+    /// <exception cref="DalApi.ObjectNotFoundEx"></exception>
+    public OrderItem Get(int ID)
     {
         try
         {
-            for (int i = 0; i < DataSource._orderItemslist.Count; i++)
-            {
-                if (DataSource._orderItemslist[i].Item.ID==orderID)
-                {
-                    return DataSource._orderItemslist[i].Item;
-                }
-            }
-            throw new DalApi.ObjectNotFoundEx();
+            OrderItem orderItem=DataSource._orderItemslist.FirstOrDefault(p=> p?.ID==ID)?? throw new DalApi.ObjectNotFoundEx();
+            return orderItem;
         }
-        catch (Exception e)
+        catch (ObjectNotFoundEx e)
         {
-            Console.WriteLine(e.Message);
-            return new OrderItem();
+            throw e;
         }
     }
     #endregion

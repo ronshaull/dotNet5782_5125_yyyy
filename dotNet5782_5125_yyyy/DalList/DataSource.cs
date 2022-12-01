@@ -17,9 +17,9 @@ internal static class DataSource
     public static int NUMBER_OF_ORDERITEMS = 200;
     #region fields-arrays of dalobjects.
     static readonly Random random = new Random();
-    internal static List<DalProduct> _productlist = new List<DalProduct>();
-    internal static List<DalOrder> _orderlist =new List<DalOrder>();
-    internal static List<DalOrderItem> _orderItemslist=new List<DalOrderItem>();
+    internal static List<Product?> _productlist = new List<Product?>();
+    internal static List<Order?> _orderlist =new List<Order?>();
+    internal static List<OrderItem?> _orderItemslist=new List<OrderItem?>();
     #endregion
     #region Config inner class
     internal static class Config
@@ -64,8 +64,14 @@ internal static class DataSource
         foreach (string line in ComputerArchitecture)
         {
 
-            _productlist.Add( new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)2, random.Next(0, 100) % 5));
+            _productlist.Add( new Product()
+            {
+                ID = Config.product_Id,
+                Name = line,
+                Price = random.NextDouble() + random.Next(10, 80),
+                Category = (Enums.Category)2,
+                InStock = random.Next(0, 100)
+            });
         }
         string[] CyberSecurity = {"Cybersecurity: The Beginner's Guide",
                                "CompTIA Security+Get Certified Get Ahead",
@@ -75,8 +81,13 @@ internal static class DataSource
         foreach (string line in CyberSecurity)
         {
 
-            _productlist.Add(new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)3, random.Next(0, 100) % 5));
+            _productlist.Add(new Product() { ID = Config.product_Id,
+                Name = line,
+                Price = random.NextDouble() + random.Next(10, 80),
+                Category = (Enums.Category)3,
+                InStock = (random.Next(0, 100) )
+                }
+        );
         }   
         string[] OS = {"Operating Systems: Three Easy Pieces",
                           "Modern Operating Systems",
@@ -85,8 +96,14 @@ internal static class DataSource
             "Operating System Concep"};
         foreach (string line in OS)
         {
-            _productlist.Add( new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)1, random.Next(0, 100) % 5));
+            _productlist.Add( new Product()
+            {
+                ID = Config.product_Id,
+                Name = line,
+                Price = random.NextDouble() + random.Next(10, 80),
+                Category = (Enums.Category)1,
+                InStock = random.Next(0, 100) 
+            });
         }
         string[] ProgrammingLanguges = {"Learn python",
             "Python for beginners",
@@ -98,43 +115,67 @@ internal static class DataSource
         foreach (string line in ProgrammingLanguges)
         {
 
-            _productlist.Add( new DalProduct(Config.product_Id, line,
-                random.NextDouble() + random.Next(10, 80), (Enums.Category)0, random.Next(0, 100) % 5));
+            _productlist.Add( new Product()
+            {
+                ID = Config.product_Id,
+                Name = line,
+                Price = random.NextDouble() + random.Next(10, 80),
+                Category = (Enums.Category)0,
+                InStock = random.Next(0, 100)
+            });
         }
 
     }
     private static void createOrderArray()
     {
-        for (int i = 0; i < random.Next(20,40); i++)
+        for (int i = 0; i < random.Next(20, 40); i++)
         {
             string Customer = "CustomerNo.";
             Customer += random.Next(0, 400).ToString();
             string Email = "";
             Email += Customer + "@gmail.com";
-            _orderlist.Add( new DalOrder(Config.order_Id,
-                Customer,
-                Email,
-                "israel"));
+            DateTime now = DateTime.Now;
+            _orderlist.Add(new Order()
+            {
+                ID = Config.order_Id,
+                CustomerName = Customer,
+                CustomerEmail = Email,
+                CustomerAdress = "israel",
+                OrderDate = now.AddDays(new Random().Next(-4,0)),
+                ShipDate = (new Random().Next(0,1000)>800)? now.AddDays(new Random().Next(0, 5)):null
+            });
         }
+
     }
     private static void createOrderItemArray()
     {
         for (int i = 0; i < _orderlist.Count; i++)//first we set a product for each order.
         {
             int Product_Index=random.Next(0,_productlist.Count);//we first randomize a product.
-            _orderItemslist.Add( new DalOrderItem(_productlist[Product_Index].product.ID,
-                i,
-                random.Next(1,5)
-                ));
+            Product? product = _productlist[random.Next(0, _productlist.Count)];
+            _orderItemslist.Add(new OrderItem()
+            {
+                ID = Config.OrderItem_ID,
+                OrderId = i,
+                ProductId = product?.ID??0,
+                Amount = random.Next(1, 5),
+                Price = product?.Price ?? 0
+            }
+            );
         }
         for (int i = 0; i < random.Next(10,20); i++)//we randomly add items to exisiting orders.
         {
-            int Product_id = random.Next(0, _productlist.Count);
-            int Order_Id = random.Next(0, _orderlist.Count);
-            _orderItemslist.Add( new DalOrderItem(_productlist[Product_id].product.ID,
-                Order_Id,
-                random.Next(1, 5)
-                ));
+            Product? Product = _productlist[random.Next(0, _productlist.Count)];
+            Order? Order =_orderlist[ random.Next(0, _orderlist.Count)];
+            _orderItemslist.Add( new OrderItem()
+            {
+                ID = Config.OrderItem_ID,
+                OrderId = Order?.ID ?? 0,
+                ProductId = Product?.ID ?? 0,
+                Amount = random.Next(1, 5),
+                Price = Product?.Price ?? 0
+            }
+                );
         }
     }           
     #endregion               

@@ -80,11 +80,11 @@ internal class BOProduct : BlApi.IProduct
     /// </summary>
     /// <returns></returns>
     /// <exception cref="BO.EmptyListEx">no prudcuts in store.</exception>
-    public IEnumerable<BO.ProductForList> GetAll()
+    public IEnumerable<BO.ProductForList?> GetAll()
     {
         try
         {
-            IEnumerable<DO.Product> products = dal.Product.GetAll();
+            IEnumerable<DO.Product?> products = dal.Product.GetAll();
             List<BO.ProductForList> BOProducts = new List<BO.ProductForList>();
             foreach (DO.Product product in products)
             {
@@ -221,7 +221,7 @@ internal class BOProduct : BlApi.IProduct
     /// <returns></returns>
     private bool ProductInOrder(int ID)
     {
-        IEnumerable<DO.OrderItem> orderItems=dal.OrderItem.GetAll();
+        IEnumerable<DO.OrderItem?> orderItems=dal.OrderItem.GetAll();
         foreach (DO.OrderItem item in orderItems)
         {
             if (item.ProductId==ID)

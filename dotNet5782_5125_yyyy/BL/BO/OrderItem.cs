@@ -11,7 +11,7 @@ public class OrderItem
     //fields
     public int ID { get; set; } //order item id
     public int ProductId { get; set; }//from product itself.
-    public string ProductName { get; set; }
+    public string? ProductName { get; set; }
     public int OrderId { get; set; }//genereted.
     public double Price { get; set; }//Product price when it was purchased.
     public int Amount { get; set; }//amount of item in this order.

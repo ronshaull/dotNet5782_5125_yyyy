@@ -9,8 +9,8 @@ namespace BO;
 public class OrderTracking
 {
     public int ID { get; set; }
-    public Enums.Status Status { get; set; }
-    public List<(DateTime, string status)> Progress { get; set; }=new List<(DateTime, string)>();
+    public Enums.Status? Status { get; set; }
+    public List<(DateTime?, string? status)> Progress { get; set; }=new List<(DateTime?, string)>();
 
     public override string? ToString()
     {

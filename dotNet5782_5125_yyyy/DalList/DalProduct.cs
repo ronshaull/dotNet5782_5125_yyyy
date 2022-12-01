@@ -5,43 +5,13 @@ namespace Dal;
 
 internal class DalProduct : IProduct
 {
-    //fields
-    public Product product;
-
-    #region ctors
-    /// <summary>
-    /// deafault ctor for creating access to data source object.
-    /// </summary>
-    public DalProduct()
-    {
-        this.product = new Product();
-    }
-    /// <summary>
-    /// explicit values of product. 
-    /// in case we ant to create a a new product.
-    /// </summary>
-    /// <param name="_ID"></param>
-    /// <param name="_Name"></param>
-    /// <param name="_Price"></param>
-    /// <param name="_Category"></param>
-    /// <param name="_InStock"></param>
-    public DalProduct(int _ID, string _Name, double _Price, Enums.Category _Category, int _InStock)
-    {
-        product= new Product();
-        product.ID = _ID;   
-        product.Name = _Name;
-        product.Price = _Price;
-        product.Category = _Category;
-        product.InStock = _InStock;
-    }
-    #endregion
-    #region Override Functions
-    public override string ToString()
-    {
-        return product.ToString();
-    }
-    #endregion
     #region CRUD functions
+    /// <summary>
+    /// addding product to data source.
+    /// </summary>
+    /// <param name="product">of the product that we want to add.</param>
+    /// <returns></returns>
+    /// <exception cref="OutOfRangeEx">no more space in product list</exception>
     public int Add(Product product)
     {
         try
@@ -53,11 +23,7 @@ internal class DalProduct : IProduct
             }
             //there is space.
             product.ID = DataSource.Config.product_Id;
-            DataSource._productlist.Add( new DalProduct(product.ID,
-                product.Name,
-                product.Price,
-                product.Category,
-                product.InStock));
+            DataSource._productlist.Add(product);
             return product.ID;
         }
         catch (DalApi.OutOfRangeEx e)
@@ -65,26 +31,26 @@ internal class DalProduct : IProduct
             throw;
         }
     }
-
+    /// <summary>
+    /// to retrive a product that we need.
+    /// </summary>
+    /// <param name="ID">of the wanted product.</param>
+    /// <returns></returns>
     public Product Get(int ID) 
     {
         try
         {
+            Product product=DataSource._productlist.FirstOrDefault(p => p?.ID == ID) ?? throw new DalApi.ObjectNotFoundEx();
+            return product;
+            /*
             for (int i = 0; i < DataSource._productlist.Count; i++)
             {
-                if (DataSource._productlist[i].product.ID == ID)
+                if (DataSource._productlist[i]?.ID == ID)
                 {
-                    Product get_product=new Product();
-
-                    get_product.ID = DataSource._productlist[i].product.ID;
-                    get_product.Name = DataSource._productlist[i].product.Name;
-                    get_product.Price = DataSource._productlist[i].product.Price;
-                    get_product.Category = DataSource._productlist[i].product.Category;
-                    get_product.InStock = DataSource._productlist[i].product.InStock;
-                    return get_product;
+                    return (Product)DataSource._productlist[i];
                 }
             }
-            throw new ObjectNotFoundEx();
+            throw new ObjectNotFoundEx();*/
         }
         catch (ObjectNotFoundEx e)
         {
@@ -92,7 +58,11 @@ internal class DalProduct : IProduct
         }
         
     }
-
+    /// <summary>
+    /// to delete a certin product form data base.
+    /// </summary>
+    /// <param name="ID">of the product that we want to delete.</param>
+    /// <exception cref="EmptyListEx"></exception>
     public void Delete(int ID)
     {
         try
@@ -108,9 +78,10 @@ internal class DalProduct : IProduct
                 {
                     break;
                 }
-                if (DataSource._productlist[i].product.ID ==ID)//product was found
+                if (DataSource._productlist[i]?.ID ==ID)//product was found
                 {
                     DataSource._productlist.RemoveAt(i);
+                    //TODO: maybe short writing.
                     flag = false;
                 }
             }
@@ -127,7 +98,11 @@ internal class DalProduct : IProduct
             throw;
         }
     }
-
+    /// <summary>
+    /// to update a certin prudct.
+    /// </summary>
+    /// <param name="product">that holds all new fields.</param>
+    /// <exception cref="EmptyListEx"></exception>
     public void Update(Product product)
     {
         try
@@ -138,13 +113,10 @@ internal class DalProduct : IProduct
             }
             for (int i = 0; i < DataSource._productlist.Count; i++)//first find product.
             {
-                if (DataSource._productlist[i].product.ID == product.ID)//product was found
+                if (DataSource._productlist[i]?.ID == product.ID)//product was found
                 {
                     //start updateting product.
-                    DataSource._productlist[i].product.Name = product.Name;
-                    DataSource._productlist[i].product.Price = product.Price;
-                    DataSource._productlist[i].product.Category = product.Category;
-                    DataSource._productlist[i].product.InStock = product.InStock;
+                    DataSource._productlist[i]=product;
                     Console.WriteLine("product was updated."); //letting user know update was successful.
                     return;
                 }
@@ -160,8 +132,11 @@ internal class DalProduct : IProduct
             throw e;
         }
     }
-     
-    public IEnumerable<Product> GetAll()
+    /// <summary>
+     /// to retrive all products from data base.
+     /// </summary>
+     /// <returns></returns>
+    public IEnumerable<Product?> GetAll(Func<Product?, bool>? Select = null)
     {
         try
         {
@@ -169,18 +144,27 @@ internal class DalProduct : IProduct
             {
                 throw new DalApi.EmptyListEx();
             }
-            List<Product> products = new List<Product>();
-            foreach (DalProduct product in DataSource._productlist)
+            if (Select==null)
             {
-                Product curr = new Product();
-                curr.ID = product.product.ID;
-                curr.Name = product.product.Name;
-                curr.Price = product.product.Price;
-                curr.Category = product.product.Category;
-                curr.InStock = product.product.InStock;
-                products.Add(curr);
+                List<Product?> products = new List<Product?>();
+                foreach (Product product in DataSource._productlist)
+                {
+                    products.Add(product);
+                }
+                return products;
             }
-            return products;
+            else
+            {
+                List<Product?> products = new List<Product?>();
+                foreach (Product product in DataSource._productlist)
+                {
+                    if (Select(product))
+                    {
+                        products.Add(product);
+                    }
+                }
+                return products;
+            }
         }
         catch (DalApi.EmptyListEx e)
         {

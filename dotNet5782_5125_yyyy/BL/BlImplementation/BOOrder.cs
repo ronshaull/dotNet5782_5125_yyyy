@@ -54,9 +54,9 @@ internal class BOOrder : BlApi.IOrder
     /// function used for getting a list of specific orders.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<BO.OrderForList> GetAll()
+    public IEnumerable<BO.OrderForList?> GetAll()
     {
-        IEnumerable<DO.Order> orders = dal.Order.GetAll();
+        IEnumerable<DO.Order?> orders = dal.Order.GetAll();
         List<BO.OrderForList> BLOrders = new List<BO.OrderForList>();
         foreach (DO.Order order in orders)
         {
@@ -65,9 +65,9 @@ internal class BOOrder : BlApi.IOrder
                 ID = order.ID,
                 CustomerName = order.CustomerName,
             };
-            tmp.Status =( order.ShipDate != DateTime.MinValue )? (BO.Enums.Status)1 : (BO.Enums.Status)0;
-            tmp.Status = (order.DeliveryDate != DateTime.MinValue) ? (BO.Enums.Status)2 :tmp.Status;
-            IEnumerable<DO.OrderItem> items = dal.OrderItem.GetAll();
+            tmp.Status =( order.ShipDate != null )? (BO.Enums.Status)1 : (BO.Enums.Status)0;
+            tmp.Status = (order.DeliveryDate != null) ? (BO.Enums.Status)2 :tmp.Status;
+            IEnumerable<DO.OrderItem?> items = dal.OrderItem.GetAll();
             double total = 0;
             int amount = 0;
             foreach (DO.OrderItem item in items) // we calculate by hand the total and amount.
@@ -108,7 +108,7 @@ internal class BOOrder : BlApi.IOrder
                 ShipDate = order.ShipDate,
             };
             // some fields require another type of data.
-            IEnumerable<DO.OrderItem> items = dal.OrderItem.GetAll();
+            IEnumerable<DO.OrderItem?> items = dal.OrderItem.GetAll();
             double total = 0;
             foreach (DO.OrderItem item in items)
             {
@@ -121,7 +121,7 @@ internal class BOOrder : BlApi.IOrder
                         OrderId = BLOrder.ID,
                         Price = item.Price,
                         ProductId = item.ProductId,
-                        ProductName = dal.Product.Get(item.ID).Name
+                        ProductName = dal.Product.Get(item.ProductId).Name
                     };
                     total += item.OrderId == order.ID ? (double)item.Amount * item.Price : 0; //update the total.
                     BLOrder.OrderItems.Add(tmp); //add it to the order instance.
@@ -164,6 +164,7 @@ internal class BOOrder : BlApi.IOrder
         }
         catch (DalApi.ObjectNotFoundEx e)
         {
+
             throw new BO.ObjectNotFoundEx();
         }
     }
@@ -180,7 +181,7 @@ internal class BOOrder : BlApi.IOrder
                 throw new BO.InvalidParamsEx();
             DO.Order order = dal.Order.Get(ID); //if not exict an exception will be thrown, so safe to asume that in next line order
             //was found.
-            if (order.DeliveryDate != DateTime.MinValue)
+            if (order.DeliveryDate != null)
             {
                 throw new BO.GeneralEx("this order alreay was deliverd!.");
             }
@@ -223,7 +224,7 @@ internal class BOOrder : BlApi.IOrder
                 throw new BO.InvalidParamsEx(); 
             DO.Order order = dal.Order.Get(ID); //if not exict an exception will be thrown, so safe to asume that in next line order
             //was found.
-            if (order.ShipDate!=DateTime.MinValue)
+            if (order.ShipDate!=null)
             {
                 throw new BO.GeneralEx("this order alreay was shipped!.");
             }
@@ -260,14 +261,14 @@ internal class BOOrder : BlApi.IOrder
     /// <returns></returns>
     private (Double,IEnumerable<BO.OrderItem>) ProductOnOrder(int ID)
     {
-        List<DO.OrderItem> orderItems = (List<DO.OrderItem>)dal.OrderItem.GetAll();
+        List<DO.OrderItem?> orderItems = (List<DO.OrderItem?>)dal.OrderItem.GetAll();
         List<BO.OrderItem> productItems = new List<BO.OrderItem>();
         double Total = 0;
         foreach (DO.OrderItem item in orderItems)
         {
             if (item.OrderId==ID)
             {
-                productItems.Add(new OrderItem() { ID=item.ID,
+                productItems.Add(new BO.OrderItem() { ID=item.ID,
                 Amount=item.Amount,
                 OrderId=ID,
                 Price=item.Price,

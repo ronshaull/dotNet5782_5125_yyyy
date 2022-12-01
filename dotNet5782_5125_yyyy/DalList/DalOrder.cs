@@ -4,59 +4,12 @@ namespace Dal;
 
 internal class DalOrder : IOrder
 {
-    public Order order;
-
-    #region ctors
-    public DalOrder()
-    {
-        this.order = new Order();
-    }
-    public DalOrder(int _ID, string _CustomerName, string _CustomerEmail, string _CustomerAdress)
-    {
-        order = new Order();
-        order.ID = _ID;
-        order.CustomerName = _CustomerName;
-        order.CustomerEmail = _CustomerEmail;
-        order.CustomerAdress = _CustomerAdress;
-        order.OrderDate = DateTime.Now.AddDays(new Random().Next(-4,0));
-        if (new Random().Next(0,10000)<8000)//80% of getting a shipment value.
-        {
-            order.ShipDate = order.OrderDate.AddDays(new Random().Next(2, 5));
-            order.DeliveryDate = DateTime.MinValue;// as above.
-            return;
-        }
-        //if it yet to be shippted.
-        order.ShipDate =DateTime.MinValue;// for now we use min value.
-        order.DeliveryDate = DateTime.MinValue;// as above.
-    }
-    /// <summary>
-    /// this ctor is used to initielize an update object, so we can update customers' info,
-    /// and report delivery arrival.
-    /// </summary>
-    /// <param name="_ID"></param>
-    /// <param name="_CustomerName"></param>
-    /// <param name="_CustomerEmail"></param>
-    /// <param name="_CustomerAdress"></param>
-    /// <param name="_DeliveryDate"></param>
-    public DalOrder(int _ID, string _CustomerName, string _CustomerEmail, string _CustomerAdress,DateTime _OrderDate)
-    {
-        order = new Order();
-        order.ID = _ID;
-        order.CustomerName = _CustomerName;
-        order.CustomerEmail = _CustomerEmail;
-        order.CustomerAdress = _CustomerAdress;
-        order.OrderDate = _OrderDate;
-        order.ShipDate = DateTime.MinValue;
-        order.DeliveryDate = DateTime.MinValue;
-    }
-    #endregion
-    #region Override Functions
-    public override string? ToString()
-    {
-        return order.ToString();
-    }
-    #endregion
     #region CRUD functions
+    /// <summary>
+    /// adding new order to data layer
+    /// </summary>
+    /// <param name="order">new order to add</param>
+    /// <returns></returns>
     public int Add(Order order)
     {
         try
@@ -66,11 +19,7 @@ internal class DalOrder : IOrder
                 throw new DalApi.OutOfRangeEx();
             }
             order.ID = DataSource.Config.order_Id;
-            DataSource._orderlist.Add( new DalOrder(order.ID,
-                order.CustomerName,
-                order.CustomerEmail,
-                order.CustomerAdress,
-                DateTime.Now));
+            DataSource._orderlist.Add(order);
             return order.ID;
         }
         catch (DalApi.OutOfRangeEx e)
@@ -78,59 +27,67 @@ internal class DalOrder : IOrder
             throw;
         }
     }
+    /// <summary>
+    /// to retrive a certin order details from data layer.
+    /// </summary>
+    /// <param name="ID">of wanted order.</param>
+    /// <returns></returns>
+    /// <exception cref="DalApi.EmptyListEx"></exception>
     public Order Get(int ID)
     {
         try
         {
-            for (int i = 0; i < DataSource._orderlist.Count; i++)
+            if (DataSource._orderlist.Count==0)
             {
-                if (DataSource._orderlist[i].order.ID == ID)
-                {
-                    Order get_order = new Order();
-                    get_order.ID = DataSource._orderlist[i].order.ID;
-                    get_order.CustomerName = DataSource._orderlist[i].order.CustomerName;
-                    get_order.CustomerEmail = DataSource._orderlist[i].order.CustomerEmail;
-                    get_order.CustomerAdress = DataSource._orderlist[i].order.CustomerAdress;
-                    get_order.OrderDate = DataSource._orderlist[i].order.OrderDate;
-                    get_order.ShipDate = DataSource._orderlist[i].order.ShipDate;
-                    get_order.DeliveryDate = DataSource._orderlist[i].order.DeliveryDate;
-                    return get_order;
-                }
+                throw new DalApi.EmptyListEx();
             }
-            throw new DalApi.ObjectNotFoundEx();
+            Order order = DataSource._orderlist.FirstOrDefault(p => p?.ID == ID) ?? throw new DalApi.ObjectNotFoundEx();
+            return order;
         }
-        catch (Exception e)
+        catch (DalApi.ObjectNotFoundEx e)
         {
-            Console.WriteLine(e.Message);
-            return new Order();
+            throw e;
         }
        
     }
+    /// <summary>
+    /// to update certin order in data layer.
+    /// </summary>
+    /// <param name="order">contains all new parameters</param>
+    /// <exception cref="EmptyListEx"></exception>
     public void Update(Order order)
     {
         try
         {
-            for (int i = 0; i < DataSource._orderlist.Count; i++)
+            if (DataSource._productlist.Count == 0)
             {
-                if (DataSource._orderlist[i].order.ID == order.ID)
+                throw new EmptyListEx();
+            }
+            for (int i = 0; i < DataSource._orderlist.Count; i++)//first find product.
+            {
+                if (DataSource._orderlist[i]?.ID == order.ID)//product was found
                 {
-                    DataSource._orderlist[i].order.CustomerName = order.CustomerName;
-                    DataSource._orderlist[i].order.CustomerEmail = order.CustomerEmail;
-                    DataSource._orderlist[i].order.CustomerAdress = order.CustomerAdress;
-                    DataSource._orderlist[i].order.OrderDate = order.OrderDate;
-                    DataSource._orderlist[i].order.ShipDate = order.ShipDate;
-                    DataSource._orderlist[i].order.DeliveryDate = order.DeliveryDate;
-                    Console.WriteLine("order was updated!");
+                    //start updateting product.
+                    DataSource._orderlist[i] = order;
+                    Console.WriteLine("product was updated."); //letting user know update was successful.
                     return;
                 }
             }
             throw new DalApi.ObjectNotFoundEx();
         }
-        catch (Exception e)
+        catch (DalApi.EmptyListEx e)
         {
-            Console.WriteLine(e.Message);
+            throw e;
+        }
+        catch (DalApi.ObjectNotFoundEx e)
+        {
+            throw e;
         }
     }
+    /// <summary>
+    /// to dlete a certin order from data layer.
+    /// </summary>
+    /// <param name="ID">of order we wish to delete.</param>
     public void Delete(int ID)
     {
         try
@@ -146,7 +103,7 @@ internal class DalOrder : IOrder
                 {
                     break;
                 }
-                if (DataSource._orderlist[i].order.ID == ID)//we found the order to delete.
+                if (DataSource._orderlist[i]?.ID == ID)//we found the order to delete.
                 {
                     DataSource._orderlist.RemoveAt(i);
                     flag = false;
@@ -165,23 +122,34 @@ internal class DalOrder : IOrder
             throw;
         }
     }
-    public IEnumerable<Order> GetAll()
+    /// <summary>
+    /// to retrive all orders from data layer, they can be filterd.
+    /// </summary>
+    /// <param name="Select">a delegate that either hold filter function (bool) or null when we wish to see all orders.</param>
+    /// <returns></returns>
+    public IEnumerable<Order?> GetAll(Func<Order?, bool>? Select = null)
     {
-        List<Order> orders = new List<Order>();
-        foreach (DalOrder order in DataSource._orderlist)
+        if (Select==null)
         {
-            Order curr = new Order();
-            curr.ID = order.order.ID;
-            curr.OrderDate = order.order.OrderDate;
-            curr.CustomerAdress = order.order.CustomerAdress;
-            curr.CustomerEmail = order.order.CustomerEmail;
-            curr.ShipDate = order.order.ShipDate;
-            curr.CustomerName = order.order.CustomerName;
-            curr.DeliveryDate= order.order.DeliveryDate;
-            orders.Add(curr);
+            List<Order?> orders = new List<Order?>();
+            foreach (Order order in DataSource._orderlist)
+            {
+                orders.Add(order);
+            }
+            return orders;
         }
-        return orders;
+        else
+        {
+            List<Order?> orders = new List<Order?>();
+            foreach (Order order in DataSource._orderlist)
+            {
+                if (Select(order))
+                {
+                    orders.Add(order);
+                }
+            }
+            return orders;
+        }
     }
     #endregion
-    
 }

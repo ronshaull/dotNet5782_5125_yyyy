@@ -5,9 +5,9 @@ public struct Product
 {
     //fields
     public int ID { get; set; } //product serial number.
-    public string Name { get; set; } //product name.
+    public string? Name { get; set; } //product name.
     public double Price { get; set; } // product price in us dollars.
-    public DO.Enums.Category Category { get; set; } // product section.
+    public DO.Enums.Category? Category { get; set; } // product section.
     public int InStock { get; set; } // is it in stock for sale?
     /// <summary>
     /// An override for to string function to display product info
