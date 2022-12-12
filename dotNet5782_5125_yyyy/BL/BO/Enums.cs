@@ -8,7 +8,8 @@ public class Enums
         Programming_languages,
         Operating_systems,
         Computer_architecture,
-        Cyber_security
+        Cyber_security,
+        All
 
     }
     public enum Status

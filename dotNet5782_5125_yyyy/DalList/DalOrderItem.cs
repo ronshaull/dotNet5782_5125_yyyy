@@ -140,5 +140,28 @@ internal class DalOrderItem : IOrderItem
             throw e;
         }
     }
+    /// <summary>
+    /// a special get function to retrive a certin order item, if it satisfy Select function.
+    /// </summary>
+    /// <param name="ID">of the object.</param>
+    /// <param name="Select">the condition implemented by a boolean function.</param>
+    /// <returns></returns>
+    /// <exception cref="ObjectNotFoundEx"></exception>
+    public OrderItem Get(int ID, Func<OrderItem?, bool>? Select)
+    {
+        try
+        {
+            OrderItem orderItem = DataSource._orderItemslist.FirstOrDefault(p => p?.ID == ID) ?? throw new ObjectNotFoundEx();
+            if (Select(orderItem))
+            {
+                return orderItem;
+            }
+            throw new ObjectNotFoundEx();
+        }
+        catch (DalApi.ObjectNotFoundEx e)
+        {
+            throw e;
+        }
+    }
     #endregion
 }

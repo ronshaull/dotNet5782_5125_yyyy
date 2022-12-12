@@ -151,5 +151,27 @@ internal class DalOrder : IOrder
             return orders;
         }
     }
+    /// <summary>
+    /// special get function to retrive a certin order, that satisfy a condition.
+    /// </summary>
+    /// <param name="ID">of the order</param>
+    /// <param name="Select">the condition implemented by a boolean function.</param>
+    /// <returns></returns>
+    public Order Get(int ID, Func<Order?, bool>? Select)
+    {
+        try
+        {
+            Order order = DataSource._orderlist.FirstOrDefault(p => p?.ID == ID) ?? throw new ObjectNotFoundEx();
+            if (Select(order))
+            {
+                return order;
+            }
+            throw new ObjectNotFoundEx();
+        }
+        catch (ObjectNotFoundEx e)
+        {
+            throw e;
+        }
+    }
     #endregion
 }

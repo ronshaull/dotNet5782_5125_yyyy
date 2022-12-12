@@ -171,6 +171,28 @@ internal class DalProduct : IProduct
             throw;
         }
     }
-       
+    /// <summary>
+    /// a special get function to retrive a certin Product, if it satisfy Select function.
+    /// </summary>
+    /// <param name="ID">of the product</param>
+    /// <param name="Select">condition implemented by bollean function.</param>
+    /// <returns></returns>
+    /// <exception cref="DalApi.ObjectNotFoundEx"></exception>
+    public Product Get(int ID, Func<Product?, bool>? Select)
+    {
+        try
+        {
+            Product p = DataSource._productlist.FirstOrDefault(p => p?.ID == ID) ?? throw new DalApi.ObjectNotFoundEx();
+            if (Select(p))
+                return p;
+            else
+                throw new DalApi.ObjectNotFoundEx();
+        }
+        catch (ObjectNotFoundEx e)
+        {
+            throw e;
+        }
+    }
+
     #endregion
 }

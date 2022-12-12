@@ -7,7 +7,7 @@ namespace BLTest
 {
     internal class Program
     {
-        static BlImplementation.Bl BL = new BlImplementation.Bl();
+        static BlImplementation.BL BL = new BlImplementation.BL();
         static DalList dal = new DalList();
         static void Main(string[] args)
         {

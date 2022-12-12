@@ -11,7 +11,7 @@ namespace BlImplementation;
 /// <summary>
 /// this class is used to access all primary BO.Objects functioality from main program.
 /// </summary>
-sealed public class Bl : IBL
+sealed public class BL : IBL
 {
     public IProduct Product => new BOProduct();
 
