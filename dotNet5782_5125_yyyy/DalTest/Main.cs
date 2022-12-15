@@ -8,10 +8,9 @@ namespace Main // Note: actual namespace depends on the project name.
    
     public class DalMain
     {
-        static DalList DalList = new DalList();
         static void Main(string[] args)
         {
-            //DalList.Order.Add(new DO.Order());
+            DalApi.IDal? dal = DalApi.Factory.Get();
             Console.WriteLine("Hello Customer!\nplease choose one of the options below:");
             int choose=1;
             while (choose!=0)
@@ -59,7 +58,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         p.Name = name;
                                         p.InStock=inStock;
                                         p.Category = (Enums.Category)category;
-                                        DalList.Product.Add(p);
+                                        dal?.Product.Add(p);
                                         break;
                                     }
                                 case "b":
@@ -67,12 +66,12 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter product ID to display.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(), out ID);
-                                        Console.WriteLine(DalList.Product.Get(ID));
+                                        Console.WriteLine(dal?.Product.Get(ID));
                                         break;
                                     }
                                 case "c":
                                     {
-                                        IEnumerable<Product> Products = DalList.Product.GetAll();
+                                        IEnumerable<Product> Products =(IEnumerable<Product>)dal?.Product.GetAll();
                                         foreach (Product Product in Products)
                                         {
                                             Console.WriteLine(Product);
@@ -103,7 +102,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         p.Name = name;
                                         p.InStock = inStock;
                                         p.Category = (Enums.Category)category;
-                                        DalList.Product.Update(p);
+                                        dal?.Product.Update(p);
                                         break;
 
                                     }
@@ -112,7 +111,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("enter product ID to delete.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(),out ID);
-                                        DalList.Product.Delete(ID);
+                                        dal?.Product.Delete(ID);
                                         break;
                                     }
                                 case "f":
@@ -147,7 +146,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         o.CustomerName = name;
                                         o.CustomerEmail = email;
                                         o.CustomerAdress = adress;
-                                        DalList.Order.Add(o);
+                                        dal?.Order.Add(o);
                                         break;
 
 
@@ -157,12 +156,12 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to display.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(),out ID);
-                                        Console.WriteLine(DalList.Order.Get(ID));
+                                        Console.WriteLine(dal?.Order.Get(ID));
                                         break;
                                     }
                                 case "c":
                                     {
-                                        IEnumerable<Order> Orders = DalList.Order.GetAll();
+                                        IEnumerable<Order> Orders =(IEnumerable<Order>)dal?.Order.GetAll();
                                         foreach (Order order in Orders)
                                         {
                                             Console.WriteLine(order);
@@ -185,7 +184,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         o.CustomerName = name;
                                         o.CustomerEmail = email;
                                         o.CustomerAdress = adress;
-                                        DalList.Order.Update(o);
+                                        dal?.Order.Update(o);
                                         break;
                                     }
                                 case "e":
@@ -193,7 +192,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to delete.");
                                         int ID;
                                         int.TryParse(Console.ReadLine(), out ID);
-                                        DalList.Order.Delete(ID);
+                                        dal?.Order.Delete(ID);
                                         break;
                                     }
                                 case "f":
@@ -230,7 +229,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         OrderItem oi = new OrderItem();
                                         oi.OrderId=OrderID;
                                         oi.ProductId=ProductID;
-                                        DalList.OrderItem.Add(oi);
+                                        dal?.OrderItem.Add(oi);
                                         break;
                                     }
                                 case "b":
@@ -242,7 +241,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order Id to add this item to");
                                         int OrderID;
                                         int.TryParse(Console.ReadLine(), out OrderID);
-                                        Console.WriteLine(DalList.OrderItem.Get(OrderID));
+                                        Console.WriteLine(dal?.OrderItem.Get(OrderID));
                                         break;
                                     }
                                 case "c":
@@ -252,7 +251,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to display its items.");
                                         int OrderID;
                                         int.TryParse(Console.ReadLine(), out OrderID);*/
-                                        IEnumerable <OrderItem > Items = DalList.OrderItem.GetAll();
+                                        IEnumerable <OrderItem > Items =(IEnumerable<OrderItem>) dal?.OrderItem.GetAll();
                                         foreach (OrderItem item in Items)
                                         {
                                             Console.WriteLine(item);
@@ -274,7 +273,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         oi.ProductId = ProductID;
                                         oi.OrderId = OrderID;
                                         oi.Amount=Amount;
-                                        DalList.OrderItem.Update(oi);
+                                        dal?.OrderItem.Update(oi);
                                         break;
                                     }
                                 case "e":
@@ -282,7 +281,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter Order item id to delete");
                                         int ID;
                                         int.TryParse(Console.ReadLine(), out ID);
-                                        DalList.OrderItem.Delete(ID);
+                                        dal?.OrderItem.Delete(ID);
                                         break;
                                     }
                                 case "f":

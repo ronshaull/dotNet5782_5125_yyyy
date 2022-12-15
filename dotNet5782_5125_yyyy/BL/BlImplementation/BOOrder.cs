@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BlApi;
 using BO;
-using Dal;
 using DalApi;
 
 namespace BlImplementation;
@@ -13,7 +12,7 @@ namespace BlImplementation;
 internal class BOOrder : BlApi.IOrder
 {
     //fields
-    private IDal dal = new DalList();
+    private IDal? dal = DalApi.Factory.Get();
 
 
     #region IOrder implementation

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BlApi;
 using BO;
-using Dal;
 using DalApi;
 
 namespace BlImplementation;
@@ -13,7 +12,7 @@ namespace BlImplementation;
 internal class BOCart : ICart
 {
     //fields
-    private IDal dal=new DalList();
+    private IDal? dal=DalApi.Factory.Get();
     #region ICart implementation
     /// <summary>
     /// function used to add a product to a specific cart.

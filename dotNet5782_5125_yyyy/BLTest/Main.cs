@@ -7,11 +7,10 @@ namespace BLTest
 {
     internal class Program
     {
-        static BlImplementation.BL BL = new BlImplementation.BL();
-        static DalList dal = new DalList();
+       
         static void Main(string[] args)
         {
-            
+            BlApi.IBL? BL = Factory.Get();
             Console.WriteLine("Hello Customer!"+"\n"+"To create a new cart please enter following data:\n");
             string cname, cemail, cadress = "";
             Console.WriteLine("enter your name");

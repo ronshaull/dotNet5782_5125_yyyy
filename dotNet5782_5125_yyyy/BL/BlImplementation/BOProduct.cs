@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dal;
 using DalApi;
 
 namespace BlImplementation;
@@ -11,7 +10,7 @@ namespace BlImplementation;
 internal class BOProduct : BlApi.IProduct
 {
     //fields
-    private IDal dal=new DalList();
+    private IDal? dal = DalApi.Factory.Get();
     #region IProduct implementaion.
     /// <summary>
     /// function add a new product to product list in data layer.

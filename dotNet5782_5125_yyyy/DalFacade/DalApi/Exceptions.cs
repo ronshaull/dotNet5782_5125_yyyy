@@ -33,4 +33,13 @@ public class EmptyListEx: Exception
 {
     public string message = "list was empty!.";
 }
-
+/// <summary>
+/// when trying to laod the correct dal lyer, if an exception occurs 
+/// then this instance is used.
+/// </summary>
+[Serializable]
+public class DalConfigException : Exception
+{
+    public DalConfigException(string msg) : base(msg) { }
+    public DalConfigException(string msg, Exception ex) : base(msg, ex) { }
+}

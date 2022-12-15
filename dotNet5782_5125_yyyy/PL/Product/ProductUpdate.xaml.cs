@@ -1,6 +1,4 @@
-﻿using BlApi;
-using BlImplementation;
-using BO;
+﻿using BO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +20,14 @@ namespace PL.Product
     /// </summary>
     public partial class ProductUpdate : Window
     {
-        IBL bl;
+        BlApi.IBL bl;
         /// <summary>
         /// ctor for update product window.
         /// notice we use same bl instance for singletone.
         /// </summary>
         /// <param name="_bl">as we get it from prevouis windows.</param>
         /// <param name="product"></param>
-        public ProductUpdate(IBL _bl,BO.ProductForList product)
+        public ProductUpdate(BlApi.IBL _bl,BO.ProductForList product)
         {
             bl= _bl;
             InitializeComponent();
