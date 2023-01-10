@@ -1,10 +1,14 @@
 ﻿using DO;
 using DalApi;
 
+
 namespace Dal;
 
 internal class DalProduct : IProduct
 {
+    /*NOTICE: in this calss we use linq query and lambada expression for crud.
+     * in other objects we use linq query using extenstion methods.
+     */
     #region CRUD functions
     /// <summary>
     /// addding product to data source.
@@ -40,17 +44,8 @@ internal class DalProduct : IProduct
     {
         try
         {
-            Product product=DataSource._productlist.FirstOrDefault(p => p?.ID == ID) ?? throw new DalApi.ObjectNotFoundEx();
+            Product product =DataSource._productlist.FirstOrDefault(p => p?.ID == ID) ?? throw new DalApi.ObjectNotFoundEx();
             return product;
-            /*
-            for (int i = 0; i < DataSource._productlist.Count; i++)
-            {
-                if (DataSource._productlist[i]?.ID == ID)
-                {
-                    return (Product)DataSource._productlist[i];
-                }
-            }
-            throw new ObjectNotFoundEx();*/
         }
         catch (ObjectNotFoundEx e)
         {
@@ -71,26 +66,9 @@ internal class DalProduct : IProduct
             {
                 throw new EmptyListEx();
             }
-            bool flag = true;//flag is true until we delete the product.
-            for (int i = 0; i < DataSource._productlist.Count; i++)
-            {
-                if (!flag)
-                {
-                    break;
-                }
-                if (DataSource._productlist[i]?.ID ==ID)//product was found
-                {
-                    DataSource._productlist.RemoveAt(i);
-                    //TODO: maybe short writing.
-                    flag = false;
-                }
-            }
-            if (flag)
-            {
+            int exp = DataSource._productlist.RemoveAll(p => p?.ID == ID);
+            if (exp == 0)
                 throw new DalApi.ObjectNotFoundEx();
-            }
-            else
-                Console.WriteLine("product was deleted.");
             return;
         }
         catch(DalApi.ObjectNotFoundEx e)
@@ -111,17 +89,11 @@ internal class DalProduct : IProduct
             {
                 throw new EmptyListEx();
             }
-            for (int i = 0; i < DataSource._productlist.Count; i++)//first find product.
-            {
-                if (DataSource._productlist[i]?.ID == product.ID)//product was found
-                {
-                    //start updateting product.
-                    DataSource._productlist[i]=product;
-                    Console.WriteLine("product was updated."); //letting user know update was successful.
-                    return;
-                }
-            }
-            throw new DalApi.ObjectNotFoundEx();
+            // we changed implemenation using linq to object query. and lambada expression.
+            int exp=DataSource._productlist.RemoveAll(pr=> product.ID==pr?.ID);
+            if (exp == 0)
+                throw new DalApi.ObjectNotFoundEx();
+            DataSource._productlist.Add(product);
         }
         catch(DalApi.EmptyListEx e)
         {
@@ -146,23 +118,19 @@ internal class DalProduct : IProduct
             }
             if (Select==null)
             {
-                List<Product?> products = new List<Product?>();
-                foreach (Product product in DataSource._productlist)
-                {
-                    products.Add(product);
-                }
+                List<Product?> products = DataSource._productlist.Where(p=> p!=null).ToList();
                 return products;
             }
             else
             {
-                List<Product?> products = new List<Product?>();
-                foreach (Product product in DataSource._productlist)
+                List<Product?> products = DataSource._productlist.Where(Select).ToList();
+               /* foreach (Product product in DataSource._productlist)
                 {
                     if (Select(product))
                     {
                         products.Add(product);
                     }
-                }
+                }*/
                 return products;
             }
         }

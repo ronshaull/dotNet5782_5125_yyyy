@@ -1,5 +1,4 @@
-﻿using BO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,17 +12,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace PL.Order
+namespace PL.Product
 {
     /// <summary>
-    /// Interaction logic for OrderWindow.xaml
+    /// Interaction logic for CustomerProductView.xaml
     /// </summary>
-    public partial class OrderWindow : Window
+    public partial class CustomerProductView : Window
     {
-        public OrderWindow(BlApi.IBL Bl, string Email)
+        BlApi.IBL bl;
+        public CustomerProductView(BlApi.IBL bl, BO.Product product)
         {
             InitializeComponent();
-            List<OrderForList?> orderForLists =(List<OrderForList?>) Bl.Order.GetAll();
+            this.bl = bl;
+            List<BO.Product> tmp=new List<BO.Product>();
+            tmp.Add(product);
+            ProductListView.ItemsSource = tmp;
         }
     }
 }

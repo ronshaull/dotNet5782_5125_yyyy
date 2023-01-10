@@ -71,7 +71,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                     }
                                 case "c":
                                     {
-                                        IEnumerable<Product> Products =(IEnumerable<Product>)dal?.Product.GetAll();
+                                        IEnumerable<Product?> Products =(IEnumerable<Product?>)dal?.Product.GetAll();
                                         foreach (Product Product in Products)
                                         {
                                             Console.WriteLine(Product);
@@ -99,6 +99,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("enter amount in stock.");
                                         int.TryParse(Console.ReadLine(), out inStock);
                                         Product p = new Product();
+                                        p.ID = ID;
                                         p.Name = name;
                                         p.InStock = inStock;
                                         p.Category = (Enums.Category)category;
@@ -161,12 +162,11 @@ namespace Main // Note: actual namespace depends on the project name.
                                     }
                                 case "c":
                                     {
-                                        IEnumerable<Order> Orders =(IEnumerable<Order>)dal?.Order.GetAll();
+                                        IEnumerable<Order?> Orders =(IEnumerable<Order?>)dal?.Order.GetAll();
                                         foreach (Order order in Orders)
                                         {
                                             Console.WriteLine(order);
                                         }
-                                        
                                         break;
                                     }
                                 case "d":
@@ -251,7 +251,7 @@ namespace Main // Note: actual namespace depends on the project name.
                                         Console.WriteLine("please enter order ID to display its items.");
                                         int OrderID;
                                         int.TryParse(Console.ReadLine(), out OrderID);*/
-                                        IEnumerable <OrderItem > Items =(IEnumerable<OrderItem>) dal?.OrderItem.GetAll();
+                                        IEnumerable <OrderItem?> Items =(IEnumerable<OrderItem?>) dal?.OrderItem.GetAll();
                                         foreach (OrderItem item in Items)
                                         {
                                             Console.WriteLine(item);

@@ -46,6 +46,12 @@ internal class DalOrderItem : IOrderItem
             {
                 throw new DalApi.EmptyListEx();
             }
+            int exp = DataSource._orderItemslist.RemoveAll(oi => oi?.ID == orderItem.ID);
+            if (exp==0)
+                throw new DalApi.ObjectNotFoundEx();
+            DataSource._orderItemslist.Add(orderItem);
+            
+            /*
             for (int i = 0; i < DataSource._orderItemslist.Count; i++)
             {
                 if (DataSource._orderItemslist[i]?.ID==orderItem.ID)
@@ -54,7 +60,7 @@ internal class DalOrderItem : IOrderItem
                     return; 
                 }
             }
-            throw new DalApi.ObjectNotFoundEx();
+            throw new DalApi.ObjectNotFoundEx();*/
         }
         catch (ObjectNotFoundEx e)
         {
@@ -70,22 +76,26 @@ internal class DalOrderItem : IOrderItem
     {
         try
         {
-            bool flag = true;
-            for (int i = 0; i < DataSource._orderItemslist.Count; i++)
-            {
-                if (!flag)
-                {
-                    break;
-                }
-                if (DataSource._orderItemslist[i]?.ID==ID)
-                {
-                    DataSource._orderItemslist.RemoveAt(i);
-                    flag = false;
-                    Console.WriteLine("item was deleted from order");
-                    return;
-                }
-            }
-            throw new DalApi.ObjectNotFoundEx();
+            int exp = DataSource._orderItemslist.RemoveAll(p => p?.ID == ID);
+            if (exp == 0)
+                throw new DalApi.ObjectNotFoundEx();
+            return;
+            /* bool flag = true;
+              for (int i = 0; i < DataSource._orderItemslist.Count; i++)
+              {
+                  if (!flag)
+                  {
+                      break;
+                  }
+                  if (DataSource._orderItemslist[i]?.ID==ID)
+                  {
+                      DataSource._orderItemslist.RemoveAt(i);
+                      flag = false;
+                      Console.WriteLine("item was deleted from order");
+                      return;
+                  }
+              }
+              throw new DalApi.ObjectNotFoundEx();*/
         }
         catch (Exception e)
         {
@@ -101,16 +111,11 @@ internal class DalOrderItem : IOrderItem
     {
         if (Select==null) //no filter.
         {
-            List<OrderItem?> orderItems = new List<OrderItem?>();
-            foreach (OrderItem orderItem in DataSource._orderItemslist)
-            {
-                orderItems.Add(orderItem);
-            }
-            return orderItems;
+            return DataSource._orderItemslist.Where(oi => oi != null).ToList();
         }
         else
         {
-            List<OrderItem?> orderItems = new List<OrderItem?>();
+           /* List<OrderItem?> orderItems = new List<OrderItem?>();
             foreach (OrderItem orderItem in DataSource._orderItemslist)
             {
              
@@ -118,8 +123,8 @@ internal class DalOrderItem : IOrderItem
                 {
                     orderItems.Add(orderItem);
                 }
-            }
-            return orderItems;
+            }*/
+            return DataSource._orderItemslist.Where(Select).ToList();
         }
     }
     /// <summary>

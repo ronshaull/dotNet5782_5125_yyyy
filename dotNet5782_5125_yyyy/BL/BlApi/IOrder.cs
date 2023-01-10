@@ -13,7 +13,7 @@ public interface IOrder
     /// function used for getting a list of specific orders.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<OrderForList?> GetAll();
+    public IEnumerable<OrderForList?> GetAll(Func<DO.Order?, bool>? select = null);
     /// <summary>
     /// function used to get details of specific order.
     /// </summary>

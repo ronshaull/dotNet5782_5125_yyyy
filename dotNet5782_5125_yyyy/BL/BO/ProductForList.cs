@@ -19,7 +19,7 @@ public class ProductForList
         pfl += "ID: " + String.Format("{0:000000}", ID) + "\n";
         pfl +="Name: "+ ProductName + "\n";
         pfl += "Price: " + String.Format("{0:00.00}", Price) + "\n";
-        pfl +="Category"+Category.ToString() + "\n";    
+        pfl +="Category: "+Category.ToString() + "\n";    
         return pfl;
     }
 }

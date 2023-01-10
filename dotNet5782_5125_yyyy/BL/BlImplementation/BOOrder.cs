@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BlApi;
 using BO;
 using DalApi;
+using DO;
 
 namespace BlImplementation;
 
@@ -13,7 +14,7 @@ internal class BOOrder : BlApi.IOrder
 {
     //fields
     private IDal? dal = DalApi.Factory.Get();
-
+    Func<DO.Order?, BO.OrderForList> MyDelagate;
 
     #region IOrder implementation
     /// <summary>
@@ -35,9 +36,9 @@ internal class BOOrder : BlApi.IOrder
             OrderDate=order.OrderDate,
             ShipDate=order.ShipDate,
             DeliveryDate=order.DeliveryDate};
-            (double, IEnumerable<OrderItem>) tuple = ProductOnOrder(ID);
+            (double, IEnumerable<BO.OrderItem>) tuple = ProductOnOrder(ID);
             BOOrder.Total = tuple.Item1;
-            BOOrder.OrderItems =(List<OrderItem>) tuple.Item2;
+            BOOrder.OrderItems =(List<BO.OrderItem>) tuple.Item2;
             return BOOrder; 
         }
         catch (DalApi.ObjectNotFoundEx e)
@@ -53,10 +54,21 @@ internal class BOOrder : BlApi.IOrder
     /// function used for getting a list of specific orders.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<BO.OrderForList?> GetAll()
+    public IEnumerable<BO.OrderForList?> GetAll(Func<DO.Order?, bool>? select = null)
     {
-        IEnumerable<DO.Order?> orders = dal.Order.GetAll();
-        List<BO.OrderForList> BLOrders = new List<BO.OrderForList>();
+        try
+        {
+                IEnumerable<DO.Order?> orders = dal.Order.GetAll(select);
+                MyDelagate = Convertor;
+                return orders.Select(MyDelagate).ToList();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+       
+        /*List<BO.OrderForList> BLOrders = new List<BO.OrderForList>();
         foreach (DO.Order order in orders)
         {
             BO.OrderForList tmp = new BO.OrderForList()
@@ -77,8 +89,7 @@ internal class BOOrder : BlApi.IOrder
             tmp.Total = total;
             tmp.ItemAmount = amount;
             BLOrders.Add(tmp);
-        }
-        return BLOrders;
+        }*/
     }
     /// <summary>
     /// function used to get details of specific order.
@@ -180,13 +191,17 @@ internal class BOOrder : BlApi.IOrder
                 throw new BO.InvalidParamsEx();
             DO.Order order = dal.Order.Get(ID); //if not exict an exception will be thrown, so safe to asume that in next line order
             //was found.
+            if (order.ShipDate==null)
+            {
+                throw new GeneralEx("this order was yet to be shipped, therefore cannot be deliverd.");
+            }
             if (order.DeliveryDate != null)
             {
                 throw new BO.GeneralEx("this order alreay was deliverd!.");
             }
             order.DeliveryDate = DateTime.Now;
             dal.Order.Update(order);
-            BO.Order BOOrder = new Order()
+            BO.Order BOOrder = new BO.Order()
             {
                 ID = order.ID,
                 CustomerAdress = order.CustomerAdress,
@@ -231,7 +246,7 @@ internal class BOOrder : BlApi.IOrder
             dal.Order.Update(order);//ask data layer to update.
             
             //careate a BO Object updated.
-            BO.Order BOOrder=new Order() { ID=order.ID,
+            BO.Order BOOrder=new BO.Order() { ID=order.ID,
             CustomerAdress=order.CustomerAdress,
             CustomerEmail=order.CustomerEmail,
             CustomerName=order.CustomerName,
@@ -277,6 +292,28 @@ internal class BOOrder : BlApi.IOrder
             }
         }
         return (Total,productItems);
+    }
+    private BO.OrderForList Convertor(DO.Order? order)
+    {
+        BO.OrderForList tmp = new BO.OrderForList()
+        {
+            ID = order?.ID??0,
+            CustomerName = order?.CustomerName,
+        };
+        tmp.Status = (order?.ShipDate != null) ? (BO.Enums.Status)1 : (BO.Enums.Status)0;
+        tmp.Status = (order?.DeliveryDate != null) ? (BO.Enums.Status)2 : tmp.Status;
+        IEnumerable<DO.OrderItem?> items = dal.OrderItem.GetAll();
+        double total = 0;
+        int amount = 0;
+        //TODO: maybe use sum?!
+        foreach (DO.OrderItem item in items) // we calculate by hand the total and amount.
+        {
+            amount += item.OrderId == order?.ID ? item.Amount : 0;
+            total += item.OrderId == order?.ID ? (double)item.Amount * item.Price : 0;
+        }
+        tmp.Total = total;
+        tmp.ItemAmount = amount;
+        return tmp;
     }
     #endregion
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PL.Cart;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +22,33 @@ namespace PL.Product
     public partial class AddProduct : Window
     {
         BlApi.IBL bl;
+        #region data binding
+        public string Addname {
+            get { return (string)GetValue(NameProperty); }
+            set { SetValue(NameProperty, value); }
+        }
+        public static readonly DependencyProperty NameProperty =
+        DependencyProperty.Register("Addname", typeof(string), typeof(AddProduct));
+        public string AddPrice
+        {
+            get { return (string)GetValue(PriceProperty); }
+            set { SetValue(PriceProperty, value); }
+        }
+        public static readonly DependencyProperty PriceProperty =
+        DependencyProperty.Register("AddPrice", typeof(string), typeof(AddProduct));
+        public string AddInStock
+        {
+            get { return (string)GetValue(InStockProperty); }
+            set { SetValue(InStockProperty, value); }
+        }
+        public static readonly DependencyProperty InStockProperty =
+        DependencyProperty.Register("AddInStock", typeof(string), typeof(AddProduct));
+        public Array EnumsValue
+        {   get;
+            set;
+        }
+        public BO.Enums.Category CategorySelected;
+        #endregion
         /// <summary>
         /// ctor for add product window.
         /// </summary>
@@ -27,8 +56,8 @@ namespace PL.Product
         public AddProduct(BlApi.IBL _bl)
         {
             bl = _bl;
+            EnumsValue= Enum.GetValues(typeof(BO.Enums.Category));
             InitializeComponent();
-            CategorySelector.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));
         }
         /// <summary>
         /// choosing an id, not functional, id is generated in dal layer. from datasource to prevent doubles.
@@ -73,37 +102,35 @@ namespace PL.Product
         /// <param name="e"></param>
         private void CategorySelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            CategorySelected = (BO.Enums.Category)((ComboBox)sender).SelectedItem;
         }
         /// <summary>
         /// clicking the add button event trigers this function.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Product(object sender, RoutedEventArgs e)
         {
             try
             {
-                int ID;
-                int.TryParse(IDBox.Text, out ID);
                 int InStock;
-                if (!int.TryParse(InStockBox.Text, out InStock))
+                if (!int.TryParse(AddInStock, out InStock))
                     throw new Exception("In stock is not a number!");
                 //int.TryParse(InStockBox.Text, out InStock);
-                string Name = NameBox.Text!=""?NameBox.Text:throw new Exception("Name is empty!");
+                string Name = Addname!=""?Addname:throw new Exception("Name is empty!");
                 double Price;
-                if (!double.TryParse(PriceBox.Text, out Price))
+                if (!double.TryParse(AddPrice, out Price))
                     throw new Exception("Price is not a number!");
-                BO.Enums.Category category = (BO.Enums.Category)CategorySelector.SelectedItem;
                 BO.Product p = new BO.Product()
                 {
-                    Category = category,
-                    ID = ID,
+                    Category = CategorySelected,
                     InStock = InStock,
-                    Name = Name,
+                    Name = Addname,
                     Price = Price
                 };
                 bl.Product.Add(p);
                 MessageBox.Show("Product added to store!.");
+                this.Close();
             }
             catch (BO.OutOfRangeEx ex)
             {

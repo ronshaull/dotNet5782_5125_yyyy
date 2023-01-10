@@ -44,6 +44,10 @@ public class Order
         else
             Order_string += "Delivery Date:" + DeliveryDate.ToString() + "\n";
         return Order_string;
+        foreach (OrderItem item in OrderItems)
+        {
+            Order_string += item.ToString();
+        }
     }
     #endregion
 }

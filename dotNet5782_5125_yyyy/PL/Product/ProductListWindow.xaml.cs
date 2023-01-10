@@ -1,5 +1,8 @@
-﻿using System;
+﻿using BO;
+using PL.Order;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,19 +23,39 @@ namespace PL.Product
     public partial class ProductListWindow : Window
     { 
         BlApi.IBL bl;
+
+        public ObservableCollection<ProductForList?> products
+        {
+            get { return (ObservableCollection<ProductForList>)GetValue(ProductProperty); }
+            set { SetValue(ProductProperty, value); }
+        }
+        public ObservableCollection<BO.OrderForList?> orders
+        {
+            get { return (ObservableCollection<OrderForList>)GetValue(OrderProperty); }
+            set { SetValue(OrderProperty, value); }
+        }
+        public static readonly DependencyProperty ProductProperty=
+            DependencyProperty.Register("products",typeof(ObservableCollection<ProductForList>),typeof(ProductListWindow));
+        public static readonly DependencyProperty OrderProperty =
+            DependencyProperty.Register("orders", typeof(ObservableCollection<OrderForList>), typeof(ProductListWindow));
+        public Array EnumsValue
+        {
+            get;
+            set;
+        }
         /// <summary>
         /// ctor for list view window.
         /// </summary>
         /// <param name="bl">we get the same bl forom main window, singeltone.</param>
         public ProductListWindow(BlApi.IBL bl)
         {
-            this.bl = bl;
+            products = new ObservableCollection<ProductForList?>(bl.Product.GetAll());
+            orders = new ObservableCollection<BO.OrderForList?>(bl.Order.GetAll());
+            EnumsValue = Enum.GetValues(typeof(BO.Enums.Category));
             InitializeComponent();
-            ProductListView.ItemsSource = bl.Product.GetAll();
-            //ProductListView_SelectionChanged(this, null);
-            TypeSelector.Items.Clear();
-            TypeSelector.ItemsSource = Enum.GetValues(typeof(BO.Enums.Category));
+            this.bl = bl;
         }
+        
         /// <summary>
         /// changes the list by filtering it by book type.
         /// to see all back agin choose all.
@@ -41,25 +64,23 @@ namespace PL.Product
         /// <param name="e"></param>
         private void TypeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            BO.Enums.Category category=(BO.Enums.Category)TypeSelector.SelectedItem; 
+            BO.Enums.Category category=(BO.Enums.Category)((ComboBox)sender).SelectedItem; 
             switch (category)
             {
                 case BO.Enums.Category.Programming_languages:
-                    {
-                        ProductListView.ItemsSource= bl.Product.GetAll(delegate(DO.Product? p){ return p?.Category == 0; });
-                    }
+                    products = new ObservableCollection<ProductForList?>(bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)0; }));
                     break;
                 case BO.Enums.Category.Operating_systems:
-                    ProductListView.ItemsSource = bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category ==(DO.Enums.Category)1; });
+                    products = new ObservableCollection<ProductForList?>(bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)1; }));
                     break;
                 case BO.Enums.Category.Computer_architecture:
-                    ProductListView.ItemsSource = bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)2; });
+                    products = new ObservableCollection<ProductForList?>(bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)2; }));
                     break;
                 case BO.Enums.Category.Cyber_security:
-                    ProductListView.ItemsSource = bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)3; });
+                    products = new ObservableCollection<ProductForList?>(bl.Product.GetAll(delegate (DO.Product? p) { return p?.Category == (DO.Enums.Category)3; }));
                     break;
                 case BO.Enums.Category.All:
-                    ProductListView.ItemsSource = bl.Product.GetAll();
+                    products = new ObservableCollection<ProductForList?>(bl.Product.GetAll());
                     break;
             }
            
@@ -69,10 +90,12 @@ namespace PL.Product
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddProduct(object sender, RoutedEventArgs e)
         {
             AddProduct AP=new AddProduct(bl);
-            AP.Show();
+            AP.ShowDialog();
+            products = new ObservableCollection<ProductForList?>(bl.Product.GetAll());
+            
         }
         /// <summary>
         /// an Item double clicked event coused by double clicking an item in list view.
@@ -81,7 +104,8 @@ namespace PL.Product
         /// <param name="e"></param>
         private void ProductListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            BO.ProductForList p = (BO.ProductForList)ProductListView.SelectedItem;
+            BO.ProductForList p = (BO.ProductForList)((ListView)sender).SelectedItem;
+               //BO.ProductForList p = (BO.ProductForList)ProductListView.SelectedItem
             if (p==null)
             {
                 return;
@@ -89,9 +113,22 @@ namespace PL.Product
             else
             {
                 ProductUpdate pu = new ProductUpdate(bl,p);
-                pu.Show();
+                pu.ShowDialog();
+                products = new ObservableCollection<ProductForList?>(bl.Product.GetAll());
             }
         }
-
+        /// <summary>
+        /// takes us to order update window for admin, there you could update shippment date
+        /// and deliverd date.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OrderListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            BO.OrderForList ofl = (BO.OrderForList)((ListView)sender).SelectedItem;
+            OrderUpdateWindow ouw = new OrderUpdateWindow(bl,ofl);
+            ouw.ShowDialog();
+            orders = new ObservableCollection<OrderForList?>(bl.Order.GetAll());
+        }
     }
 }

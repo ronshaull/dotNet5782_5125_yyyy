@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Product"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
+       
         Title="ProductListWindow" Height="450" Width="800">
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
@@ -18,16 +20,25 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="TypeSelector" Grid.Column="1" HorizontalAlignment="Stretch" Margin="132,0,0,0" VerticalAlignment="Stretch" SelectionChanged="TypeSelector_SelectionChanged"/>
+            <ComboBox ItemsSource="{Binding EnumsValue, Mode=OneWay}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="132,0,0,0" VerticalAlignment="Stretch" SelectionChanged="TypeSelector_SelectionChanged"/>
             <Label Content="Category" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="241"/>
         </Grid>
-        <ListView x:Name="ProductListView" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.Row="1"  Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="ProductListView_MouseDoubleClick" SelectedItem="selected">
-            <ListView.View>
-                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="Button_Click"/>
+        <DockPanel LastChildFill="True" Grid.Row="1">
+            <ListView ItemsSource="{Binding orders}" Margin="0,21,0,19"  MouseDoubleClick="OrderListView_MouseDoubleClick" DockPanel.Dock="Right">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView ItemsSource="{Binding products, Mode=TwoWay}" Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="ProductListView_MouseDoubleClick" SelectedItem="selected" DockPanel.Dock="Left">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
+        <Button Content="Add new Product" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="AddProduct"/>
     </Grid>
 </Window>

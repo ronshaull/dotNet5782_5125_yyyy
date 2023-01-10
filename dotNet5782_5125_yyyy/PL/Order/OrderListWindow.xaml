@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Order"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OrderListWindow" Height="450" Width="800">
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
@@ -18,16 +19,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
-            <ComboBox Name="IDselector" Grid.Column="1" HorizontalAlignment="Stretch" Margin="132,0,0,0" VerticalAlignment="Stretch" />
-            <Label Content="Category" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="241"/>
         </Grid>
-        <ListView Name="OrderListView" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}">
+        <ListView  Grid.Row="1" ItemsSource="{Binding CustomerOrders}" HorizontalAlignment="Center" Margin="0,21,0,19">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
-
+       
     </Grid>
 </Window>

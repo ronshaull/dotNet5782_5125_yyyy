@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Product"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="ProductUpdate" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -20,17 +21,18 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <Label Name="IDLabel" HorizontalAlignment="Left" Margin="319,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="201"/>
+        <Label Content="{Binding id, Mode=OneWay}" HorizontalAlignment="Left" Margin="319,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="201"/>
         <Label Content="ID:" HorizontalAlignment="Left" Margin="194,10,0,0" Grid.Row="1" VerticalAlignment="Top" Height="30" Width="95"/>
-        <ComboBox Name="CategorySelector" HorizontalAlignment="Left" Margin="319,0,0,0" Grid.Row="2" VerticalAlignment="Center" Width="201" Height="30" SelectionChanged="CategorySelector_SelectionChanged"/>
+        <ComboBox ItemsSource="{Binding EnumsValue}" HorizontalAlignment="Left" Margin="319,0,0,0" Grid.Row="2" VerticalAlignment="Center" Width="201" Height="30" SelectionChanged="CategorySelector_SelectionChanged"/>
         <Label Content="Category:" HorizontalAlignment="Left" Margin="194,0,0,0" Grid.Row="2" VerticalAlignment="Center" Width="95"/>
-        <TextBox Name="NameBox" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="201" Height="28" TextChanged="NameBox_TextChanged"/>
+        <TextBox Text="{Binding name,Mode=TwoWay}" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="3" TextWrapping="Wrap"  VerticalAlignment="Top" Width="201" Height="28"/>
         <Label Content="Name:" HorizontalAlignment="Left" Margin="194,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="95"/>
-        <TextBox Name="PriceBox" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="4" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="201" Height="28" TextChanged="PriceBox_TextChanged"/>
+        <TextBox Text="{Binding price ,Mode=TwoWay}" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="4" TextWrapping="Wrap"  VerticalAlignment="Top" Width="201" Height="28"/>
         <Label Content="Price:" HorizontalAlignment="Left" Margin="194,0,0,0" Grid.Row="4" VerticalAlignment="Center" Width="59"/>
-        <TextBox Name="InStockBox" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="5" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="201" Height="28" TextChanged="InStockBox_TextChanged"/>
+        <TextBox Text="{Binding instock, Mode=TwoWay}" HorizontalAlignment="Left" Margin="319,10,0,0" Grid.Row="5" TextWrapping="Wrap"  VerticalAlignment="Top" Width="201" Height="28"/>
         <Label Content="In Stock:" HorizontalAlignment="Left" Margin="194,0,0,0" Grid.Row="5" VerticalAlignment="Center" Width="55"/>
-        <Button Content="Update" HorizontalAlignment="Left" Margin="194,20,0,0" Grid.Row="6" VerticalAlignment="Top" Click="Button_Click"/>
-       
+        <Button Content="Update" HorizontalAlignment="Left" Margin="194,20,0,0" Grid.Row="6" VerticalAlignment="Top" Click="UpdateProduct"/>
+        <Button Content="Delete this product" HorizontalAlignment="Left" Margin="194,20,0,0" Grid.Row="7" VerticalAlignment="Top" Width="115" Click="DeleteProduce"/>
+
     </Grid>
 </Window>

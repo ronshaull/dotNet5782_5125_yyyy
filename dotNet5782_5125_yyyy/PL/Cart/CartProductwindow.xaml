@@ -1,0 +1,32 @@
+﻿<Window x:Class="PL.Cart.CartProductwindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL.Cart"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="CartProductwindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions >
+        <Label Content="Update Window" HorizontalAlignment="Center" Grid.Row="0"></Label>
+        <ListView ItemsSource="{Binding ItemInCart}" Grid.Row="1" HorizontalAlignment="Center" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBox Text="{Binding NewAmount, Mode=TwoWay}" HorizontalAlignment="Left" Margin="130,41,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="78"/>
+        <Label Content="Change Amount:" HorizontalAlignment="Left" Margin="130,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="139"/>
+        <Button Content="Change It!" HorizontalAlignment="Left" Margin="130,64,0,0" Grid.Row="1" VerticalAlignment="Top" Click="ChangeAmount"/>
+        <Label Content="To remove product change amount to zero."  HorizontalAlignment="Left" Margin="28,89,0,0" Grid.Row="1" VerticalAlignment="Top" Width="263" Height="88"/>
+    </Grid>
+</Window>

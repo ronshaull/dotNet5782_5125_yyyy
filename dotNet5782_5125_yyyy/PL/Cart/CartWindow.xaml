@@ -5,8 +5,86 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Cart"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="CartWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Name="UpGrid" HorizontalAlignment="Stretch" Height="auto" Grid.Row="0"
+        VerticalAlignment="Stretch" Width="auto">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions >
+            <Label Content="{Binding TotalPrice}" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="241"/>
+        </Grid>
+        <DockPanel x:Name="DockPanel" LastChildFill="True" Grid.Row="1">
+            <ListView  ItemsSource="{Binding cartItems}" Grid.Row="1"  MouseDoubleClick="CartListView_MouseDoubleClick">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <TreeView>
+                <TreeViewItem Header="All" IsSelected="True">
+                    <ListView ItemsSource="{Binding products}" Grid.Row="1"  Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="ProductListView_MouseDoubleClick" SelectedItem="selected">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TreeViewItem>
+                <TreeViewItem Header="Computer Architecture" IsSelected="True">
+                    <ListView ItemsSource="{Binding ComputerArchitecture}" Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="ComputerArchitectureListView_MouseDoubleClick" SelectedItem="selected">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TreeViewItem>
+                <TreeViewItem Header="Cyber Security" IsSelected="True">
+                    <ListView ItemsSource="{Binding CyberSecurity}" Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="CyberSecurityListView_MouseDoubleClick" SelectedItem="selected">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TreeViewItem>
+                <TreeViewItem Header="OS" IsSelected="True">
+                    <ListView ItemsSource="{Binding OS}" Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="OsListView_MouseDoubleClick" SelectedItem="selected">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TreeViewItem>
+                <TreeViewItem Header="Programing Languges" IsSelected="True">
+                    <ListView ItemsSource="{Binding ProgramingLanguges}" Margin="0,21,0,19" Grid.RowSpan="2" MouseDoubleClick="LangugesListView_MouseDoubleClick" SelectedItem="selected">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TreeViewItem>
+            </TreeView>
+        </DockPanel>
+        <Button Content="Buy Cart" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="5" Padding="5" Click="Buy_Cart"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Label Content="ProductID:" VerticalAlignment="Center" Margin="0"/>
+            <TextBox Name="ProductIDBox" Grid.Row="2" HorizontalAlignment="Right" Margin="20,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120"/>
+            <Label Content="Amount:" VerticalAlignment="Center" Margin="0"/>
+            <TextBox Name="AmountBox" Grid.Row="2" HorizontalAlignment="Right" Margin="20,0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="120"/>
+            <Button Content="Add To Cart" Grid.Row="2" HorizontalAlignment="Right" Margin="5" Padding="5" Click="AddToCart"/>
+        </StackPanel>
+        <Button Content="View my orders" HorizontalAlignment="Left" Margin="81,5,0,0" Grid.Row="2" Width="100" Click="ViewMyOrders_buttonClick" Height="28" VerticalAlignment="Top"/>
     </Grid>
 </Window>

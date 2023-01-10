@@ -63,17 +63,10 @@ internal class DalOrder : IOrder
             {
                 throw new EmptyListEx();
             }
-            for (int i = 0; i < DataSource._orderlist.Count; i++)//first find product.
-            {
-                if (DataSource._orderlist[i]?.ID == order.ID)//product was found
-                {
-                    //start updateting product.
-                    DataSource._orderlist[i] = order;
-                    Console.WriteLine("product was updated."); //letting user know update was successful.
-                    return;
-                }
-            }
-            throw new DalApi.ObjectNotFoundEx();
+            int exp = DataSource._orderlist.RemoveAll(or => order.ID == or?.ID);
+            if (exp == 0)
+                throw new DalApi.ObjectNotFoundEx();
+            DataSource._orderlist.Add(order);
         }
         catch (DalApi.EmptyListEx e)
         {
@@ -96,22 +89,10 @@ internal class DalOrder : IOrder
             {
                 throw new DalApi.EmptyListEx();
             }
-            bool flag = true;// we use flag to avoid index violation.
-            for (int i = 0; i < DataSource._orderlist.Count; i++)
-            {
-                if (!flag)
-                {
-                    break;
-                }
-                if (DataSource._orderlist[i]?.ID == ID)//we found the order to delete.
-                {
-                    DataSource._orderlist.RemoveAt(i);
-                    flag = false;
-                    Console.WriteLine("order was deleted.");
-                    return;
-                }
-            }
-            throw new DalApi.ObjectNotFoundEx();
+            int exp = DataSource._orderlist.RemoveAll(p => p?.ID == ID);
+            if (exp == 0)
+                throw new DalApi.ObjectNotFoundEx();
+            return;
         }
         catch (DalApi.EmptyListEx e)
         {
@@ -131,24 +112,11 @@ internal class DalOrder : IOrder
     {
         if (Select==null)
         {
-            List<Order?> orders = new List<Order?>();
-            foreach (Order order in DataSource._orderlist)
-            {
-                orders.Add(order);
-            }
-            return orders;
+            return DataSource._orderlist.Where(or=> or!= null).ToList();
         }
         else
         {
-            List<Order?> orders = new List<Order?>();
-            foreach (Order order in DataSource._orderlist)
-            {
-                if (Select(order))
-                {
-                    orders.Add(order);
-                }
-            }
-            return orders;
+            return DataSource._orderlist.Where(Select).ToList();
         }
     }
     /// <summary>

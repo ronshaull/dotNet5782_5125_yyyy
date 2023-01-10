@@ -235,5 +235,12 @@ internal class BOCart : ICart
             return false;
         }
     }
+    public void UserInfoCheck(string name,string adress,string email)
+    {
+        if (name == "" || email == "" || adress == "" || !IsValidEmail(email))
+        {
+            throw new BO.CustomerDetailsEx();//catch in main.
+        }
+    }
     #endregion
 }

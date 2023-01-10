@@ -11,6 +11,7 @@ internal class BOProduct : BlApi.IProduct
 {
     //fields
     private IDal? dal = DalApi.Factory.Get();
+    Func<DO.Product?, BO.ProductForList> Mydelegate;
     #region IProduct implementaion.
     /// <summary>
     /// function add a new product to product list in data layer.
@@ -79,20 +80,21 @@ internal class BOProduct : BlApi.IProduct
     /// </summary>
     /// <returns></returns>
     /// <exception cref="BO.EmptyListEx">no prudcuts in store.</exception>
-    public IEnumerable<BO.ProductForList?> GetAll(Func<DO.Product?, bool>? Select = null)
+    public IEnumerable<BO.ProductForList?> GetAll(Func<DO.Product?, bool>? select = null)
     {
         try
         {
-            IEnumerable<DO.Product?> products = dal.Product.GetAll(Select);
-            List<BO.ProductForList> BOProducts = new List<BO.ProductForList>();
+            IEnumerable<DO.Product?> products = dal.Product.GetAll(select);
+            Mydelegate= Convertor;
+            return products.Select(Mydelegate).ToList();
+            /*List<BO.ProductForList> BOProducts = new List<BO.ProductForList>();
             foreach (DO.Product product in products)
             {
                 BOProducts.Add(new BO.ProductForList() { ID=product.ID,
                 ProductName=product.Name,
                 Price=product.Price,
                 Category=(BO.Enums.Category)product.Category});
-            }
-            return BOProducts;
+            }*/
         }
         catch (DalApi.EmptyListEx e)
         {
@@ -230,5 +232,22 @@ internal class BOProduct : BlApi.IProduct
         }
         return false;
     }
+    /// <summary>
+    /// used as convetion function in Select query.
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns></returns>
+    private BO.ProductForList Convertor(DO.Product? p)
+    {
+        BO.ProductForList productForList = new BO.ProductForList()
+        {
+            ID=p?.ID??0,
+            Price=p?.Price ?? 0,
+            Category=(BO.Enums.Category)p?.Category,
+            ProductName=p?.Name
+        };
+        return productForList;
+    }
     #endregion
 }
+
