@@ -1,4 +1,4 @@
-﻿<Window x:Class="PL.Order.OrderListWindow"
+﻿<Window x:Class="PL.Order.ItemsInOrder"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:PL.Order"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="OrderListWindow" Height="450" Width="800">
-    <Grid Name="MainGrid">
+        Title="ItemsInOrder" Height="450" Width="800">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="500*"/>
@@ -20,13 +20,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions >
         </Grid>
-        <ListView  Grid.Row="1" ItemsSource="{Binding CustomerOrders}" MouseDoubleClick="Orders_MouseDoubleClick" HorizontalAlignment="Center" Margin="50 ,50,50,50">
+        <ListView  Grid.Row="1" ItemsSource="{Binding Items}" HorizontalAlignment="Center" Margin="50 ,50,50,50">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
         </ListView>
-       
     </Grid>
 </Window>

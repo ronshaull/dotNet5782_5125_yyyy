@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Products>
+  <Product>
+    <ID>0</ID>
+    <Name>Digital Design and Computer Architecture</Name>
+    <Price>18.35</Price>
+    <InStock>43</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>1</ID>
+    <Name>Schaum's Outline of Computer Architecture</Name>
+    <Price>67.52</Price>
+    <InStock>46</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>2</ID>
+    <Name>Learning Computer Architecture with Raspberry Pi</Name>
+    <Price>68.18272737036527</Price>
+    <InStock>93</InStock>
+    <Category>2</Category>
+  </Product>
+  <Product>
+    <ID>3</ID>
+    <Name>Computer Architecture: A Quantitative Ap</Name>
+    <Price>69.24163856872988</Price>
+    <InStock>71</InStock>
+    <Category>2</Category>
+  </Product>
+  <Product>
+    <ID>4</ID>
+    <Name>Cybersecurity: The Beginner's Guide</Name>
+    <Price>18.73214912484768</Price>
+    <InStock>69</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>5</ID>
+    <Name>CompTIA Security+Get Certified Get Ahead</Name>
+    <Price>49.068699986588136</Price>
+    <InStock>32</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>6</ID>
+    <Name>Cybersecurity For Dummies</Name>
+    <Price>76.70930890559306</Price>
+    <InStock>45</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>7</ID>
+    <Name>The Art of Invisibility</Name>
+    <Price>16.880688940698555</Price>
+    <InStock>65</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>8</ID>
+    <Name>Cybersecurity Essentials</Name>
+    <Price>46.95713157457531</Price>
+    <InStock>16</InStock>
+    <Category>3</Category>
+  </Product>
+  <Product>
+    <ID>9</ID>
+    <Name>Operating Systems: Three Easy Pieces</Name>
+    <Price>75.59782294109355</Price>
+    <InStock>92</InStock>
+    <Category>1</Category>
+  </Product>
+  <Product>
+    <ID>10</ID>
+    <Name>Modern Operating Systems</Name>
+    <Price>50.76662041476381</Price>
+    <InStock>33</InStock>
+    <Category>1</Category>
+  </Product>
+  <Product>
+    <ID>11</ID>
+    <Name>Understanding Operating Systems</Name>
+    <Price>69.29047586123528</Price>
+    <InStock>90</InStock>
+    <Category>1</Category>
+  </Product>
+  <Product>
+    <ID>12</ID>
+    <Name>Operating Systems: Principles and Practice</Name>
+    <Price>16.10533034521418</Price>
+    <InStock>45</InStock>
+    <Category>1</Category>
+  </Product>
+  <Product>
+    <ID>13</ID>
+    <Name>Operating System Concep</Name>
+    <Price>47.753486794264916</Price>
+    <InStock>59</InStock>
+    <Category>1</Category>
+  </Product>
+  <Product>
+    <ID>14</ID>
+    <Name>Learn python</Name>
+    <Price>36.17624367110716</Price>
+    <InStock>95</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>15</ID>
+    <Name>Python for beginners</Name>
+    <Price>49.77974253183954</Price>
+    <InStock>25</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>16</ID>
+    <Name>Advanced Python</Name>
+    <Price>65.5428624968106</Price>
+    <InStock>0</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>17</ID>
+    <Name>Intro to C++</Name>
+    <Price>74.78657597012344</Price>
+    <InStock>84</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>18</ID>
+    <Name>C++ guide</Name>
+    <Price>16.658497761718802</Price>
+    <InStock>0</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>19</ID>
+    <Name>C# and dotnet</Name>
+    <Price>38.52557241030101</Price>
+    <InStock>70</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>20</ID>
+    <Name>A tour of C++</Name>
+    <Price>44.24062178534546</Price>
+    <InStock>39</InStock>
+    <Category>0</Category>
+  </Product>
+  <Product>
+    <ID>21</ID>
+    <Name>HTML &amp; CSS</Name>
+    <Price>75.6155228487939</Price>
+    <InStock>17</InStock>
+    <Category>0</Category>
+  </Product>
+</Products>

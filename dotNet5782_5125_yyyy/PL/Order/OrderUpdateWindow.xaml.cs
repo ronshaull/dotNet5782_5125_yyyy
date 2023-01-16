@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BO;
+using PL.Product;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,17 +23,18 @@ namespace PL.Order
     public partial class OrderUpdateWindow : Window
     {
         BlApi.IBL bl;
-        BO.Order Order;
-        ObservableCollection<BO.Order> MyOrder;
+        public BO.OrderTracking OrderTracking
+        {
+            get { return (OrderTracking)GetValue(TrackingProperty); }
+            set { SetValue(TrackingProperty, value); }
+        }
+        public static readonly DependencyProperty TrackingProperty =
+        DependencyProperty.Register("OrderTracking", typeof(BO.OrderTracking), typeof(OrderUpdateWindow));
         public OrderUpdateWindow(BlApi.IBL bl,BO.OrderForList order)
         {
+            OrderTracking = bl.Order.OrderTracking(order.ID);
             InitializeComponent();
             this.bl = bl;
-            List<BO.Order> tmp = new List<BO.Order>();
-            tmp.Add(bl.Order.Get(order.ID));
-            Order = tmp[0];
-            MyOrder = new ObservableCollection<BO.Order>(tmp);
-            this.DataContext = MyOrder;
             
         }
 
@@ -39,8 +42,8 @@ namespace PL.Order
         {
             try
             {
-                bl.Order.UpdateShipment(Order.ID);
-                MyOrder[0]=bl.Order.Get(Order.ID);
+                bl.Order.UpdateShipment(OrderTracking.ID);
+                OrderTracking = bl.Order.OrderTracking(OrderTracking.ID);
                 MessageBox.Show("Shippment date was updated.");
             }
             catch (BO.GeneralEx ex)
@@ -53,8 +56,8 @@ namespace PL.Order
         {
             try
             {
-                bl.Order.UpdateDelivery(Order.ID);
-                MyOrder[0] = bl.Order.Get(Order.ID);
+                bl.Order.UpdateDelivery(OrderTracking.ID);
+                OrderTracking = bl.Order.OrderTracking(OrderTracking.ID);
                 MessageBox.Show("Delivery date was updated.");
             }
             catch (BO.GeneralEx ex)
@@ -63,4 +66,13 @@ namespace PL.Order
             }
         }
     }
+    /*
+     *  <ListView Grid.Row="1" ItemsSource="{Binding}" HorizontalAlignment="Center" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+     */
 }

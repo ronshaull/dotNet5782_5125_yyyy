@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BO;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -29,6 +30,19 @@ namespace PL.Order
             CustomerOrders = new ObservableCollection<BO.OrderForList>(bl.Order.GetAll(delegate (DO.Order? p) { return p?.CustomerEmail == Email; }));
             InitializeComponent();
             Bl = bl;
+        }
+
+        private void Orders_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            BO.OrderForList ofl = (BO.OrderForList)((ListView)sender).SelectedItem;
+            if (ofl == null)
+                return;
+            else
+            {
+                ItemsInOrder ino = new ItemsInOrder(Bl, ofl);
+
+                ino.Show();
+            }
         }
     }
 }

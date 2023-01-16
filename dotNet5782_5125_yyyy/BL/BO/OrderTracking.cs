@@ -18,12 +18,16 @@ public class OrderTracking
         ot += "ID: " + String.Format("{0:000000}", ID) + "\n";
         ot +="Status: "+Status.ToString()+"\n";
         //TODO: how do we add the list of dates and progress?
-        ot += "order was:\n";
+        ot += "Order Progress:\n";
         for (int i = 0; i < 3; i++)
         {
             if (this.Progress[i].Item1!=DateTime.MinValue)
             {
-                ot += Progress[i].Item2 + "\n";
+                ot += Progress[i].Item2 +" At: " + Progress[i].Item1+"\n";
+            }
+            else
+            {
+                ot+="Yet to be "+Progress[i].Item2+"\n";
             }
         }
         return ot;

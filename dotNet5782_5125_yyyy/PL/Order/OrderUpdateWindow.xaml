@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Order"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="OrderUpdateWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -15,14 +16,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions >
-        <ListView Name="OrderListView" Grid.Row="1" ItemsSource="{Binding}" HorizontalAlignment="Center" >
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+
         <Button Content="Update Shippment" HorizontalAlignment="Left" Margin="61,177,0,0" Grid.Row="1" VerticalAlignment="Top" Click="UpdateShippment_Click"/>
         <Button Content="Update Delivery" HorizontalAlignment="Left" Margin="61,220,0,0" Grid.Row="1" VerticalAlignment="Top" Width="104" Click="UpdateDelivery_Click"/>
+        <Label Content="{Binding OrderTracking, Mode=TwoWay}" HorizontalAlignment="Left" Margin="281,33,0,0" Grid.Row="1" VerticalAlignment="Top" Width="247" Height="285"/>
     </Grid>
 </Window>

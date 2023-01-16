@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Orders>
+  <Order>
+    <ID>0</ID>
+    <CustomerName>CustomerNo.339</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.339@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate>15/01/2023 14:36:11</ShipDate>
+    <DeliveryDate>15/01/2023 14:36:16</DeliveryDate>
+  </Order>
+  <Order>
+    <ID>1</ID>
+    <CustomerName>CustomerNo.157</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.157@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>2</ID>
+    <CustomerName>CustomerNo.14</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.14@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>3</ID>
+    <CustomerName>CustomerNo.383</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.383@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>4</ID>
+    <CustomerName>CustomerNo.84</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.84@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>5</ID>
+    <CustomerName>CustomerNo.156</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.156@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>6</ID>
+    <CustomerName>CustomerNo.323</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.323@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>7</ID>
+    <CustomerName>CustomerNo.228</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.228@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>8</ID>
+    <CustomerName>CustomerNo.173</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.173@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>9</ID>
+    <CustomerName>CustomerNo.144</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.144@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate>14/01/2023 12:02:11</ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>10</ID>
+    <CustomerName>CustomerNo.64</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.64@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>11</ID>
+    <CustomerName>CustomerNo.216</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.216@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate>15/01/2023 12:02:11</ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>12</ID>
+    <CustomerName>CustomerNo.152</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.152@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>13</ID>
+    <CustomerName>CustomerNo.209</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.209@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>14</ID>
+    <CustomerName>CustomerNo.180</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.180@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate>13/01/2023 12:02:11</ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>15</ID>
+    <CustomerName>CustomerNo.99</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.99@gmail.com</CustomerEmail>
+    <OrderDate>10/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>16</ID>
+    <CustomerName>CustomerNo.341</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.341@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>17</ID>
+    <CustomerName>CustomerNo.147</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.147@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate>14/01/2023 12:02:11</ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>18</ID>
+    <CustomerName>CustomerNo.195</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.195@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>19</ID>
+    <CustomerName>CustomerNo.31</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.31@gmail.com</CustomerEmail>
+    <OrderDate>12/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>20</ID>
+    <CustomerName>CustomerNo.227</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.227@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>21</ID>
+    <CustomerName>CustomerNo.212</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.212@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>22</ID>
+    <CustomerName>CustomerNo.311</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.311@gmail.com</CustomerEmail>
+    <OrderDate>11/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>23</ID>
+    <CustomerName>CustomerNo.27</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.27@gmail.com</CustomerEmail>
+    <OrderDate>10/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>24</ID>
+    <CustomerName>CustomerNo.370</CustomerName>
+    <CustomerAdress>israel</CustomerAdress>
+    <CustomerEmail>CustomerNo.370@gmail.com</CustomerEmail>
+    <OrderDate>09/01/2023 12:02:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>25</ID>
+    <CustomerName>ron shaull</CustomerName>
+    <CustomerAdress>gan yavne</CustomerAdress>
+    <CustomerEmail>ron@gmail.com</CustomerEmail>
+    <OrderDate>15/01/2023 18:44:02</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>26</ID>
+    <CustomerName>ron</CustomerName>
+    <CustomerAdress>yavne</CustomerAdress>
+    <CustomerEmail>ron@gmail.com</CustomerEmail>
+    <OrderDate>15/01/2023 18:49:34</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+  <Order>
+    <ID>28</ID>
+    <CustomerName>ron </CustomerName>
+    <CustomerAdress>yavne </CustomerAdress>
+    <CustomerEmail>ron@gmail.com</CustomerEmail>
+    <OrderDate>15/01/2023 19:09:11</OrderDate>
+    <ShipDate></ShipDate>
+    <DeliveryDate></DeliveryDate>
+  </Order>
+</Orders>

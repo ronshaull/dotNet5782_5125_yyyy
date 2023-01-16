@@ -191,11 +191,11 @@ internal class BOOrder : BlApi.IOrder
                 throw new BO.InvalidParamsEx();
             DO.Order order = dal.Order.Get(ID); //if not exict an exception will be thrown, so safe to asume that in next line order
             //was found.
-            if (order.ShipDate==null)
+            if (order.ShipDate==DateTime.MinValue)
             {
                 throw new GeneralEx("this order was yet to be shipped, therefore cannot be deliverd.");
             }
-            if (order.DeliveryDate != null)
+            if (order.DeliveryDate != DateTime.MinValue)
             {
                 throw new BO.GeneralEx("this order alreay was deliverd!.");
             }
@@ -238,7 +238,7 @@ internal class BOOrder : BlApi.IOrder
                 throw new BO.InvalidParamsEx(); 
             DO.Order order = dal.Order.Get(ID); //if not exict an exception will be thrown, so safe to asume that in next line order
             //was found.
-            if (order.ShipDate!=null)
+            if (order.ShipDate!=DateTime.MinValue)
             {
                 throw new BO.GeneralEx("this order alreay was shipped!.");
             }
@@ -300,8 +300,8 @@ internal class BOOrder : BlApi.IOrder
             ID = order?.ID??0,
             CustomerName = order?.CustomerName,
         };
-        tmp.Status = (order?.ShipDate != null) ? (BO.Enums.Status)1 : (BO.Enums.Status)0;
-        tmp.Status = (order?.DeliveryDate != null) ? (BO.Enums.Status)2 : tmp.Status;
+        tmp.Status = (order?.ShipDate != DateTime.MinValue) ? (BO.Enums.Status)1 : (BO.Enums.Status)0;
+        tmp.Status = (order?.DeliveryDate != DateTime.MinValue) ? (BO.Enums.Status)2 : tmp.Status;
         IEnumerable<DO.OrderItem?> items = dal.OrderItem.GetAll();
         double total = 0;
         int amount = 0;

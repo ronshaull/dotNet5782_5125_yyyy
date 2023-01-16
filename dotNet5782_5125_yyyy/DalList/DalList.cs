@@ -14,7 +14,7 @@ sealed internal class DalList : IDal
     /// for singeltone design pattern!
     /// intance will be created only once in the whole program.
     /// </summary>
-    public static IDal Instance { get; } = new DalList();
+    public readonly static IDal instance  = new DalList();
 
     public IProduct Product => new DalProduct();
 
@@ -29,5 +29,13 @@ sealed internal class DalList : IDal
     private DalList()
     {
     }
+    static DalList()
+    {
+
+    }
     #endregion
+    public static IDal Instance
+    {
+        get { return instance; }
+    }
 }

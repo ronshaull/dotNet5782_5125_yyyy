@@ -95,7 +95,10 @@ internal class BOCart : ICart
             DO.Order order = new DO.Order() { CustomerName=name,
                 CustomerAdress=adress,
                 CustomerEmail=email,
-                OrderDate = DateTime.Now };
+                OrderDate = DateTime.Now,
+                ShipDate = DateTime.MinValue,
+                DeliveryDate = DateTime.MinValue,
+                };
             int ID = dal.Order.Add(order);
             foreach (OrderItem item in cart.Items)
             {
@@ -163,7 +166,7 @@ internal class BOCart : ICart
                 UpdateTotal(cart);
                 return cart;
             }
-            if (amount < cart.Items[i].Amount)
+            if (amount <= cart.Items[i].Amount)
             {
                 cart.Items[i].Amount = amount;
                 UpdateTotal(cart);

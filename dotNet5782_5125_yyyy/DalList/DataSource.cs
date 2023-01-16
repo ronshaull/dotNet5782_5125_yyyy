@@ -196,6 +196,10 @@ internal static class DataSource
         createProductArray();
         createOrderArray();
         createOrderItemArray();
+        /* used one time to initialize xml files with data.
+        Tools.SaveListToXMLSerializer(_productlist, "Products");
+        Tools.SaveListToXMLSerializer1(_orderlist, "Orders");
+        Tools.SaveListToXMLSerializer2(_orderItemslist, "OrderItems");*/
         }
     #endregion
 }
