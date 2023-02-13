@@ -128,5 +128,11 @@ namespace PL
             }
             
         }
+
+        private void Simulator_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SimulatorWindow simulatorWindow = new SimulatorWindow();
+            simulatorWindow.Show();
+        }
     }
 }

@@ -59,9 +59,9 @@
     <CustomerName>CustomerNo.323</CustomerName>
     <CustomerAdress>israel</CustomerAdress>
     <CustomerEmail>CustomerNo.323@gmail.com</CustomerEmail>
-    <OrderDate>09/01/2023 12:02:11</OrderDate>
-    <ShipDate></ShipDate>
-    <DeliveryDate></DeliveryDate>
+    <OrderDate>09/01/2022 12:02:11</OrderDate>
+    <ShipDate>25/01/2023 16:06:29</ShipDate>
+    <DeliveryDate>01/01/0001 00:00:00</DeliveryDate>
   </Order>
   <Order>
     <ID>7</ID>
@@ -69,8 +69,8 @@
     <CustomerAdress>israel</CustomerAdress>
     <CustomerEmail>CustomerNo.228@gmail.com</CustomerEmail>
     <OrderDate>09/01/2023 12:02:11</OrderDate>
-    <ShipDate></ShipDate>
-    <DeliveryDate></DeliveryDate>
+    <ShipDate>25/01/2023 16:06:36</ShipDate>
+    <DeliveryDate>01/01/0001 00:00:00</DeliveryDate>
   </Order>
   <Order>
     <ID>8</ID>
@@ -78,8 +78,8 @@
     <CustomerAdress>israel</CustomerAdress>
     <CustomerEmail>CustomerNo.173@gmail.com</CustomerEmail>
     <OrderDate>09/01/2023 12:02:11</OrderDate>
-    <ShipDate></ShipDate>
-    <DeliveryDate></DeliveryDate>
+    <ShipDate>25/01/2023 16:06:43</ShipDate>
+    <DeliveryDate>01/01/0001 00:00:00</DeliveryDate>
   </Order>
   <Order>
     <ID>9</ID>

@@ -43,5 +43,11 @@ public interface IOrder
     /// </summary>
     /// <param name="ID">that we want to track.</param>
     /// <returns></returns>
-    public BO.OrderTracking OrderTracking(int ID); 
+    public BO.OrderTracking OrderTracking(int ID);
+    /// <summary>
+    /// for simulator class, this function will tell us the order that was 
+    /// last handled.
+    /// </summary>
+    /// <returns></returns>
+    public BO.Order? OrderToHandle();
 }

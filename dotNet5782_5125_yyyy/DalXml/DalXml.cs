@@ -9,7 +9,11 @@ namespace Dal
 {
     internal class DalXml : IDal
     {
-        public static IDal Instance { get; }= new DalXml();
+        /// <summary>
+        /// the read only ensure this field caould be initialize only once!
+        /// 
+        /// </summary>
+        public readonly static IDal instance = new DalXml();
 
         public IProduct Product { get; } = new Dal.DoProduct();
 
@@ -20,9 +24,24 @@ namespace Dal
         #region ctor
         /// <summary>
         /// for singeltone design pattern.
+        /// private ctro insures that instances of this class could be
+        /// created only from within the class (instace)
         /// </summary>
         private DalXml()
         {
+        }
+        /// <summary>
+        /// for lazy careation, we use a static empty ctor
+        /// this insure that the instance of this class would be created 
+        /// only when its used inside the code, and not on program load.
+        /// </summary>
+        static DalXml()
+        {
+
+        }
+        public static IDal Instance
+        {
+            get { return instance; }
         }
         #endregion
     }

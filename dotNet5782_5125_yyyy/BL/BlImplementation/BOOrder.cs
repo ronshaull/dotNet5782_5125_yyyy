@@ -300,6 +300,7 @@ internal class BOOrder : BlApi.IOrder
             ID = order?.ID??0,
             CustomerName = order?.CustomerName,
         };
+        //shouold change min value to null when list
         tmp.Status = (order?.ShipDate != DateTime.MinValue) ? (BO.Enums.Status)1 : (BO.Enums.Status)0;
         tmp.Status = (order?.DeliveryDate != DateTime.MinValue) ? (BO.Enums.Status)2 : tmp.Status;
         IEnumerable<DO.OrderItem?> items = dal.OrderItem.GetAll();
@@ -314,6 +315,67 @@ internal class BOOrder : BlApi.IOrder
         tmp.Total = total;
         tmp.ItemAmount = amount;
         return tmp;
+    }
+    /// <summary>
+    /// second convertor. used in order to handle function.
+    /// </summary>
+    /// <param name="order"></param>
+    /// <returns></returns>
+    private BO.Order? BOOrderConvertor(DO.Order? order)
+    {
+        BO.Order? tmp = new()
+        {
+            ID = order?.ID ?? 0,
+            CustomerEmail = order?.CustomerEmail,
+            CustomerAdress= order?.CustomerAdress,
+            CustomerName = order?.CustomerName,
+            OrderDate = order?.OrderDate,
+            ShipDate = order?.ShipDate?? DateTime.MinValue,
+            DeliveryDate = order?.DeliveryDate ?? DateTime.MinValue,
+        };
+        return tmp;
+    }
+    /// <summary>
+    /// for simulator class, this function will tell us the order that was 
+    /// last handled.
+    /// </summary>
+    /// <returns></returns>
+    public BO.Order? OrderToHandle()
+    {
+        try
+        {
+            List<DO.Order?> Orders = dal.Order.GetAll().ToList();
+            DateTime? urgent = DateTime.MaxValue;
+            BO.Order? ToHandle = new BO.Order();
+            foreach (var order in Orders)
+            {
+                if (order?.OrderDate < urgent && order?.ShipDate == DateTime.MinValue) //order was set, and yet to be shipped, plus its been the earliest
+                {
+                    urgent = order?.OrderDate;
+                    ToHandle = BOOrderConvertor(order);
+                }
+            }
+            if (urgent == DateTime.MaxValue) //means that there si no order that is yet to be shipped.
+            {
+                foreach (var order in Orders)
+                {
+                    //we now handle orders that were shipped and yet to be deliverd.
+                    if (order?.ShipDate < urgent && order?.DeliveryDate == DateTime.MinValue)
+                    {
+                        urgent = order?.ShipDate;
+                        ToHandle = BOOrderConvertor(order);
+                    }
+                }
+            }
+            if (urgent == DateTime.MaxValue) //in case all orders were handled.
+                throw new Exception("There is no more orders to handle.");
+            return ToHandle;
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+      
     }
     #endregion
 }
